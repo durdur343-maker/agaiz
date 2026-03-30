@@ -5,347 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>نظام إجازات قسم علوم الأغذية والتقانات الاحيائية</title>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Tahoma', 'Traditional Arabic', Arial, sans-serif;
-        }
-        body {
-            background: linear-gradient(145deg, #e0eaf4 0%, #cfdef3 100%);
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 48px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
-            padding: 1.5rem;
-        }
-        .header {
-            text-align: center;
-            border-bottom: 3px solid #1e4a76;
-            padding-bottom: 1rem;
-            margin-bottom: 1.2rem;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: #0a2f44;
-        }
-        .header p {
-            margin: 0.3rem 0 0;
-            color: #2c5a7a;
-            font-size: 0.8rem;
-        }
-        .date-box {
-            background: #1e4a76;
-            padding: 0.4rem 1rem;
-            border-radius: 60px;
-            color: white;
-            font-weight: bold;
-            font-size: 0.85rem;
-            display: inline-block;
-            margin-top: 8px;
-        }
-        .connection-status {
-            margin-bottom: 1rem;
-            padding: 5px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            text-align: center;
-            background: #d4edda;
-            color: #155724;
-        }
-        .search-section {
-            background: #f0f5fa;
-            border-radius: 28px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        .search-box {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 0.5rem;
-        }
-        .search-box input {
-            flex: 2;
-            min-width: 200px;
-            padding: 8px 14px;
-            border-radius: 40px;
-            border: 1.5px solid #bdd4e2;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .search-box button {
-            padding: 8px 18px;
-        }
-        .btn {
-            background: #1e4a76;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 40px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: 0.2s;
-        }
-        .btn:hover {
-            transform: scale(0.97);
-        }
-        .btn-admin {
-            background: #b5651e;
-        }
-        .btn-secondary {
-            background: #4b6f8c;
-        }
-        .btn-danger {
-            background: #c0392b;
-        }
-        .btn-success {
-            background: #27ae60;
-        }
-        .search-results {
-            background: white;
-            border-radius: 24px;
-            padding: 1rem;
-            margin-top: 1rem;
-            text-align: right;
-        }
-        .employee-stats {
-            background: #eef3fc;
-            border-radius: 20px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .stats-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin: 10px 0;
-        }
-        .stat-badge {
-            background: white;
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-        }
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: 20px;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-        }
-        th {
-            background: #1e4a76;
-            color: white;
-            padding: 8px 6px;
-        }
-        td {
-            padding: 6px 5px;
-            border-bottom: 1px solid #dce5ec;
-        }
-        /* لوحة الإدارة */
-        .admin-panel {
-            display: none;
-            background: #f8fafd;
-            border-radius: 28px;
-            padding: 1.2rem;
-            margin-top: 1.5rem;
-            border: 2px solid #1e4a76;
-        }
-        .admin-title {
-            color: #1e4a76;
-            margin: 0 0 15px 0;
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-        /* حقول الأسماء المتعددة */
-        .multi-names-section {
-            background: white;
-            border-radius: 24px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid #cbdde9;
-        }
-        .multi-names-title {
-            font-weight: bold;
-            color: #1e4a76;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-        }
-        .names-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .name-field {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f8fafd;
-            padding: 5px 10px;
-            border-radius: 40px;
-            border: 1px solid #e2ecf3;
-        }
-        .name-field span {
-            font-weight: bold;
-            color: #4b6f8c;
-            font-size: 0.75rem;
-            min-width: 25px;
-        }
-        .name-field input {
-            flex: 1;
-            padding: 8px 10px;
-            border: none;
-            background: transparent;
-            font-size: 0.85rem;
-            outline: none;
-        }
-        .single-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: flex-end;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #cbdde9;
-        }
-        .control-group {
-            flex: 1;
-            min-width: 140px;
-        }
-        .control-group label {
-            display: block;
-            font-weight: 600;
-            color: #0a3a5a;
-            margin-bottom: 4px;
-            font-size: 0.7rem;
-        }
-        .control-group select, .control-group input {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 25px;
-            border: 1.5px solid #bdd4e2;
-            font-size: 0.85rem;
-        }
-        .add-multiple-btn {
-            background: #27ae60;
-            margin-top: 10px;
-            width: 100%;
-        }
-        .actions-bar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 1rem 0;
-        }
-        .stats-full {
-            margin-top: 1.5rem;
-        }
-        .stats-table-wrapper {
-            background: white;
-            border-radius: 24px;
-            margin-bottom: 1.2rem;
-            overflow-x: auto;
-        }
-        .stats-title {
-            background: #eef3fc;
-            padding: 0.5rem 1rem;
-            border-radius: 24px 24px 0 0;
-            font-weight: bold;
-            color: #1e4a76;
-            font-size: 0.9rem;
-        }
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75rem;
-        }
-        .stats-table th {
-            background: #f0f5fa;
-            padding: 6px;
-        }
-        .stats-table td {
-            padding: 5px;
-            text-align: center;
-        }
-        .delete-btn {
-            background: #c0392b;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 3px 10px;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-        .login-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .login-box {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 30px;
-            text-align: center;
-            width: 280px;
-        }
-        .login-box input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 25px;
-            border: 1px solid #ccc;
-        }
-        .footer-note {
-            margin-top: 1rem;
-            text-align: center;
-            font-size: 0.65rem;
-            color: #3f627f;
-            border-top: 1px dashed #b9d0e2;
-            padding-top: 0.8rem;
-        }
-        .welcome-msg {
-            text-align: center;
-            color: #4b6f8c;
-            font-size: 0.8rem;
-            margin-bottom: 0.8rem;
-        }
-        .info-badge {
-            background: #e8f0fe;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            color: #1e4a76;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1rem; }
-            .names-grid { grid-template-columns: 1fr; }
-        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', 'Tahoma', 'Traditional Arabic', Arial, sans-serif; }
+        body { background: linear-gradient(145deg, #e0eaf4 0%, #cfdef3 100%); min-height: 100vh; margin: 0; padding: 20px; display: flex; align-items: center; justify-content: center; }
+        .container { max-width: 1200px; width: 100%; background: rgba(255, 255, 255, 0.95); border-radius: 48px; box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2); padding: 1.5rem; }
+        .header { text-align: center; border-bottom: 3px solid #1e4a76; padding-bottom: 1rem; margin-bottom: 1.2rem; }
+        .header h1 { margin: 0; font-size: 1.5rem; color: #0a2f44; }
+        .header p { margin: 0.3rem 0 0; color: #2c5a7a; font-size: 0.8rem; }
+        .date-box { background: #1e4a76; padding: 0.4rem 1rem; border-radius: 60px; color: white; font-weight: bold; font-size: 0.85rem; display: inline-block; margin-top: 8px; }
+        .connection-status { margin-bottom: 1rem; padding: 5px; border-radius: 30px; font-size: 0.75rem; text-align: center; background: #d4edda; color: #155724; }
+        .search-section { background: #f0f5fa; border-radius: 28px; padding: 1rem; margin-bottom: 1rem; text-align: center; }
+        .search-box { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 0.5rem; }
+        .search-box input { flex: 2; min-width: 200px; padding: 8px 14px; border-radius: 40px; border: 1.5px solid #bdd4e2; font-size: 0.9rem; outline: none; }
+        .search-box button { padding: 8px 18px; }
+        .btn { background: #1e4a76; border: none; padding: 8px 18px; border-radius: 40px; color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .btn:hover { transform: scale(0.97); }
+        .btn-admin { background: #b5651e; }
+        .btn-secondary { background: #4b6f8c; }
+        .btn-danger { background: #c0392b; }
+        .btn-success { background: #27ae60; }
+        .search-results { background: white; border-radius: 24px; padding: 1rem; margin-top: 1rem; text-align: right; }
+        .employee-stats { background: #eef3fc; border-radius: 20px; padding: 1rem; margin-bottom: 1rem; }
+        .stats-grid { display: flex; flex-wrap: wrap; gap: 1rem; margin: 15px 0; justify-content: flex-start; }
+        .stat-badge { background: white; padding: 10px 20px; border-radius: 50px; font-size: 0.95rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); min-width: 140px; text-align: center; }
+        .stat-badge strong { font-size: 1.2rem; margin-left: 5px; color: #1e4a76; }
+        .total-separate { background: #e8f0fe; padding: 12px 20px; border-radius: 40px; font-size: 0.9rem; margin-top: 10px; text-align: center; border-right: 4px solid #1e4a76; }
+        .table-wrapper { overflow-x: auto; border-radius: 20px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { background: #1e4a76; color: white; padding: 8px 6px; }
+        td { padding: 6px 5px; border-bottom: 1px solid #dce5ec; }
+        .admin-panel { display: none; background: #f8fafd; border-radius: 28px; padding: 1.2rem; margin-top: 1.5rem; border: 2px solid #1e4a76; }
+        .admin-title { color: #1e4a76; margin: 0 0 15px 0; font-size: 1.1rem; font-weight: bold; }
+        .multi-names-section { background: white; border-radius: 24px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #cbdde9; }
+        .names-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .name-field { display: flex; align-items: center; gap: 8px; background: #f8fafd; padding: 5px 10px; border-radius: 40px; border: 1px solid #e2ecf3; }
+        .name-field span { font-weight: bold; color: #4b6f8c; font-size: 0.75rem; min-width: 25px; }
+        .name-field input { flex: 1; padding: 8px 10px; border: none; background: transparent; font-size: 0.85rem; outline: none; }
+        .single-controls { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #cbdde9; }
+        .control-group { flex: 1; min-width: 140px; }
+        .control-group label { display: block; font-weight: 600; color: #0a3a5a; margin-bottom: 4px; font-size: 0.7rem; }
+        .control-group select, .control-group input { width: 100%; padding: 8px 12px; border-radius: 25px; border: 1.5px solid #bdd4e2; font-size: 0.85rem; }
+        .actions-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 1rem 0; }
+        .stats-full { margin-top: 1.5rem; }
+        .stats-table-wrapper { background: white; border-radius: 24px; margin-bottom: 1.2rem; overflow-x: auto; }
+        .stats-title { background: #eef3fc; padding: 0.5rem 1rem; border-radius: 24px 24px 0 0; font-weight: bold; color: #1e4a76; font-size: 0.9rem; }
+        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .stats-table th { background: #f0f5fa; padding: 6px; }
+        .stats-table td { padding: 5px; text-align: center; }
+        .delete-btn { background: #c0392b; color: white; border: none; border-radius: 20px; padding: 3px 10px; cursor: pointer; font-size: 0.7rem; }
+        .login-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .login-box { background: white; padding: 1.5rem; border-radius: 30px; text-align: center; width: 280px; }
+        .login-box input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 25px; border: 1px solid #ccc; }
+        .footer-note { margin-top: 1rem; text-align: center; font-size: 0.65rem; color: #3f627f; border-top: 1px dashed #b9d0e2; padding-top: 0.8rem; }
+        .welcome-msg { text-align: center; color: #4b6f8c; font-size: 0.8rem; margin-bottom: 0.8rem; }
+        @media (max-width: 600px) { .container { padding: 1rem; } .names-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -355,17 +67,12 @@
         <p>سجل إجازات الموظفين</p>
         <div class="date-box">📅 <span id="currentDate"></span></div>
     </div>
-
     <div id="connectionStatus" class="connection-status">🟢 متصل بقاعدة البيانات</div>
+    <div class="welcome-msg" id="welcomeMsg">🔍 يمكنك البحث عن موظف لعرض إجازاته وإحصائياته</div>
 
-    <div class="welcome-msg" id="welcomeMsg">
-        🔍 يمكنك البحث عن موظف لعرض إجازاته وإحصائياته
-    </div>
-
-    <!-- قسم البحث للزوار -->
     <div class="search-section">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 أدخل اسم الموظف ">
+            <input type="text" id="searchInput" placeholder="🔍 أدخل اسم الموظف (مثال: دريد حامد محمود)">
             <button id="searchBtn" class="btn-secondary btn">بحث</button>
             <button id="clearSearchBtn" class="btn-secondary btn" style="background:#95a5a6;">مسح</button>
             <button id="adminBtn" class="btn-admin btn">🔐 إدارة</button>
@@ -373,102 +80,61 @@
         <div id="searchResults" class="search-results" style="display:none;"></div>
     </div>
 
-    <!-- لوحة الإدارة (تظهر بعد تسجيل الدخول) -->
     <div id="adminPanel" class="admin-panel">
         <div class="admin-title">⚙️ لوحة الإدارة - إضافة متعددة</div>
-        
-        <!-- حقول الأسماء المتعددة -->
         <div class="multi-names-section">
             <div class="multi-names-title">📝 إضافة عدة موظفين بنفس نوع الإجازة والعدد</div>
             <div class="names-grid" id="namesGrid">
-                <!-- 5 حقول أسماء -->
-                <div class="name-field"><span>1.</span><input type="text" class="multi-name" placeholder="اسم الموظف الأول" autocomplete="off"></div>
-                <div class="name-field"><span>2.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثاني" autocomplete="off"></div>
-                <div class="name-field"><span>3.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثالث" autocomplete="off"></div>
-                <div class="name-field"><span>4.</span><input type="text" class="multi-name" placeholder="اسم الموظف الرابع" autocomplete="off"></div>
-                <div class="name-field"><span>5.</span><input type="text" class="multi-name" placeholder="اسم الموظف الخامس" autocomplete="off"></div>
+                <div class="name-field"><span>1.</span><input type="text" class="multi-name" placeholder="اسم الموظف الأول"></div>
+                <div class="name-field"><span>2.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثاني"></div>
+                <div class="name-field"><span>3.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثالث"></div>
+                <div class="name-field"><span>4.</span><input type="text" class="multi-name" placeholder="اسم الموظف الرابع"></div>
+                <div class="name-field"><span>5.</span><input type="text" class="multi-name" placeholder="اسم الموظف الخامس"></div>
             </div>
-            
             <div class="single-controls">
-                <div class="control-group">
-                    <label>📌 نوع الإجازة (لجميع الأسماء)</label>
-                    <select id="multiLeaveType">
-                        <option value="اعتيادية">اعتيادية (أيام)</option>
-                        <option value="مرضية">مرضية (أيام)</option>
-                        <option value="رسمية">رسمية (أيام)</option>
-                        <option value="زمنية">زمنية (ساعات)</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label>🔢 العدد / المدة (لجميع الأسماء)</label>
-                    <input type="number" id="multiLeaveCount" value="1" step="1">
-                </div>
-                <div class="control-group">
-                    <button id="addMultipleBtn" class="btn-success btn" style="margin-top: 22px;">➕ إضافة الكل</button>
-                </div>
+                <div class="control-group"><label>📌 نوع الإجازة</label><select id="multiLeaveType"><option value="اعتيادية">اعتيادية (أيام)</option><option value="مرضية">مرضية (أيام)</option><option value="رسمية">رسمية (أيام)</option><option value="زمنية">زمنية (ساعات)</option></select></div>
+                <div class="control-group"><label>🔢 العدد</label><input type="number" id="multiLeaveCount" value="1" step="1"></div>
+                <div class="control-group"><button id="addMultipleBtn" class="btn-success btn" style="margin-top: 22px;">➕ إضافة الكل</button></div>
             </div>
-            <div class="info-badge">💡 ملاحظة: يتم إضافة جميع الأسماء المدخلة (غير الفارغة) بنفس نوع الإجازة والعدد المختار</div>
         </div>
-
-        <!-- إضافة فردية (اختياري) -->
         <div class="multi-names-section" style="margin-top: 10px;">
-            <div class="multi-names-title">➕ إضافة فردية (اسم واحد)</div>
+            <div class="multi-names-title">➕ إضافة فردية</div>
             <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
-                <div style="flex:2; min-width: 150px;"><input type="text" id="singleName" placeholder="اسم الموظف" style="width:100%; padding:10px; border-radius:25px; border:1.5px solid #bdd4e2;"></div>
-                <div style="flex:1; min-width: 120px;"><select id="singleType" style="width:100%; padding:10px; border-radius:25px;"><option value="اعتيادية">اعتيادية</option><option value="مرضية">مرضية</option><option value="رسمية">رسمية</option><option value="زمنية">زمنية</option></select></div>
-                <div style="flex:0.5; min-width: 80px;"><input type="number" id="singleCount" value="1" style="width:100%; padding:10px; border-radius:25px;"></div>
+                <div style="flex:2; min-width: 150px;"><input type="text" id="singleName" placeholder="اسم الموظف" style="width:100%; padding:10px; border-radius:25px;"></div>
+                <div style="flex:1;"><select id="singleType" style="width:100%; padding:10px; border-radius:25px;"><option value="اعتيادية">اعتيادية</option><option value="مرضية">مرضية</option><option value="رسمية">رسمية</option><option value="زمنية">زمنية</option></select></div>
+                <div style="flex:0.5;"><input type="number" id="singleCount" value="1" style="width:100%; padding:10px; border-radius:25px;"></div>
                 <div><button id="addSingleBtn" class="btn">➕ إضافة</button></div>
             </div>
         </div>
-        
         <div class="actions-bar">
-            <button id="refreshBtn" class="btn-secondary btn">🔄 تحديث البيانات</button>
-            <button id="clearAllBtn" class="btn-danger btn">🗑️ مسح جميع الإجازات</button>
-            <button id="logoutBtn" class="btn-secondary btn" style="background:#7f8c8d;">🚪 خروج من الإدارة</button>
+            <button id="refreshBtn" class="btn-secondary btn">🔄 تحديث</button>
+            <button id="clearAllBtn" class="btn-danger btn">🗑️ مسح الكل</button>
+            <button id="logoutBtn" class="btn-secondary btn" style="background:#7f8c8d;">🚪 خروج</button>
         </div>
-
-        <!-- إحصائيات تفصيلية -->
         <div class="stats-full">
-            <div class="stats-table-wrapper">
-                <div class="stats-title">📈 إحصائيات الإجازات لكل موظف</div>
-                <table class="stats-table">
-                    <thead><tr><th>الموظف</th><th>✅ اعتيادية</th><th>🩺 مرضية</th><th>🏢 رسمية</th><th>⏱️ زمنية</th><th>📊 الإجمالي</th></thead>
-                    <tbody id="statsTableBody">...</tbody>
-                </table>
-            </div>
+            <div class="stats-table-wrapper"><div class="stats-title">📈 إحصائيات الإجازات لكل موظف</div>
+            <table class="stats-table"><thead>验<th>الموظف</th><th>✅ اعتيادية</th><th>🩺 مرضية</th><th>🏢 رسمية</th><th>⏱️ زمنية</th><th>📊 الإجمالي</th>验</thead>
+            <tbody id="statsTableBody">...</tbody>}</div>
         </div>
-
-        <!-- جدول جميع الإجازات مع حذف -->
-        <div class="table-wrapper">
-            <table>
-                <thead><tr><th>#</th><th>الاسم الأصلي</th><th>الاسم الموحد</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead>
-                <tbody id="adminTableBody"></tbody>
-            </table>
-        </div>
+        <div class="table-wrapper">\t<table><thead><tr><th>#</th><th>الاسم</th><th>الاسم الموحد</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="adminTableBody"></tbody></table></div>
     </div>
-
-    <div class="footer-note">
-               ✅فكرة وبرمجة ذاتية القسم✅
-        ✅بدء بأستخدام التطبيق من تاريخ 29/3/2026✅
-    </div>
+    <div class="footer-note">✅ فكرة وتصميم ذاتية القسم
+    تواريخ قبل 28\3\2026 غير موجودة</div>
 </div>
-
-<!-- نافذة تسجيل الدخول -->
-<div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-        <h3>🔐 الدخول إلى لوحة الإدارة</h3>
-        <input type="password" id="passwordInput" placeholder="كلمة المرور">
-        <button id="loginBtn" class="btn" style="width:100%;">تأكيد</button>
-        <button id="cancelLoginBtn" class="btn-secondary btn" style="width:100%; margin-top:8px;">إلغاء</button>
-    </div>
-</div>
+<div id="loginOverlay" class="login-overlay"><div class="login-box"><h3>🔐 الدخول</h3><input type="password" id="passwordInput"><button id="loginBtn" class="btn" style="width:100%;">تأكيد</button><button id="cancelLoginBtn" class="btn-secondary btn" style="width:100%; margin-top:8px;">إلغاء</button></div></div>
 
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbyYqrwKQCK62NXfUwDHvAJai6QyXmVtQ0juulYbiNTkpbKxZPIGTTsMSIjcUHByY4YLEw/exec";
     const ADMIN_PASSWORD = "admin";
-    
     let leavesArray = [];
     let isAdmin = false;
+
+    function extractNumber(value) {
+        if (value === undefined || value === null) return 0;
+        if (typeof value === 'number') return value;
+        let num = parseFloat(value.toString().replace(/[^0-9.-]/g, ''));
+        return isNaN(num) ? 0 : num;
+    }
 
     function getNormalizedName(fullName) {
         if(!fullName) return "";
@@ -484,11 +150,7 @@
     }
     updateDate();
     setInterval(updateDate, 60000);
-
-    function getCurrentDateString() {
-        const today = new Date();
-        return today.toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'numeric', day:'numeric' });
-    }
+    function getCurrentDateString() { return new Date().toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'numeric', day:'numeric' }); }
 
     async function callAPI(action, data = {}) {
         const params = new URLSearchParams({ action, ...data });
@@ -502,16 +164,10 @@
         try {
             const result = await callAPI("getAll");
             if(result.success) {
-                leavesArray = result.leaves || [];
-                if(isAdmin) {
-                    renderAdminStats();
-                    renderAdminTable();
-                }
+                leavesArray = (result.leaves || []).map(l => ({ ...l, count: extractNumber(l.count) }));
+                if(isAdmin) { renderAdminStats(); renderAdminTable(); }
             }
-        } catch(error) {
-            console.error(error);
-            document.getElementById('connectionStatus').innerHTML = '🔴 خطأ في الاتصال';
-        }
+        } catch(error) { console.error(error); document.getElementById('connectionStatus').innerHTML = '🔴 خطأ في الاتصال'; }
     }
 
     function renderAdminStats() {
@@ -519,8 +175,7 @@
         for(let leave of leavesArray) {
             const normName = leave.normalizedName;
             const type = leave.type;
-            let val = parseFloat(leave.count);
-            if(isNaN(val)) val = 0;
+            let val = leave.count;
             if(!statsMap.has(normName)) statsMap.set(normName, { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 });
             const record = statsMap.get(normName);
             if(type === 'اعتيادية') record.اعتيادية += val;
@@ -534,8 +189,9 @@
         for(let [name, data] of statsMap.entries()) {
             let totalDays = data.اعتيادية + data.مرضية + data.رسمية;
             rows += `<tr><td style="font-weight:bold;">${escapeHtml(name)}</td>
-                    <td>${data.اعتيادية}</td><td>${data.مرضية}</td><td>${data.رسمية}</td>
-                    <td>${data.زمنية}</td><td>${totalDays} يوم / ${data.زمنية} ساعة</td></tr>`;
+                      <td>${data.اعتيادية}</td><td>${data.مرضية}</td>
+                      <td>${data.رسمية}</td><td>${data.زمنية}</td>
+                      <td>${totalDays} يوم / ${data.زمنية} ساعة</td></tr>`;
         }
         tbody.innerHTML = rows;
     }
@@ -546,137 +202,115 @@
         let html = '';
         leavesArray.forEach((item, idx) => {
             let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم';
-            html += `<tr>
-                        <td>${idx+1}</td>
-                        <td>${escapeHtml(item.originalName)}</td>
-                        <td>${escapeHtml(item.normalizedName)}</td>
-                        <td>${escapeHtml(item.type)}</td>
-                        <td>${item.count} ${unit}</td>
-                        <td>${escapeHtml(item.dateStr)}</td>
-                        <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td>
-                    </tr>`;
+            html += `<tr><td>${idx+1}</td><td>${escapeHtml(item.originalName)}</td><td>${escapeHtml(item.normalizedName)}</td>
+                      <td>${escapeHtml(item.type)}</td><td>${item.count} ${unit}</td>
+                      <td>${escapeHtml(item.dateStr)}</td>
+                      <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td></tr>`;
         });
         tbody.innerHTML = html;
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const id = btn.getAttribute('data-id');
-                if(confirm("حذف الإجازة؟")) {
-                    await callAPI("delete", { id: id });
-                    await loadAllLeaves();
-                }
+                if(confirm("حذف الإجازة؟")) { await callAPI("delete", { id: id }); await loadAllLeaves(); }
             });
         });
     }
 
-    // إضافة عدة أسماء دفعة واحدة
     async function addMultipleLeaves() {
-        if(!isAdmin) { alert("غير مصرح! الرجاء تسجيل الدخول أولاً"); return; }
-        
+        if(!isAdmin) { alert("غير مصرح!"); return; }
         const nameInputs = document.querySelectorAll('.multi-name');
         const leaveType = document.getElementById('multiLeaveType').value;
-        const count = document.getElementById('multiLeaveCount').value;
-        
-        if(!count || count <= 0) { alert("أدخل عدد صحيح"); return; }
-        
-        const names = [];
-        for(let input of nameInputs) {
-            let name = input.value.trim();
-            if(name !== "") {
-                names.push(name);
-            }
-        }
-        
-        if(names.length === 0) {
-            alert("الرجاء إدخال اسم واحد على الأقل");
-            return;
-        }
-        
-        let addedCount = 0;
+        const count = parseFloat(document.getElementById('multiLeaveCount').value);
+        if(isNaN(count) || count <= 0) { alert("أدخل عدداً صحيحاً"); return; }
+        const names = Array.from(nameInputs).map(i => i.value.trim()).filter(n => n !== "");
+        if(names.length === 0) { alert("أدخل اسم واحد على الأقل"); return; }
         for(let name of names) {
             const normalized = getNormalizedName(name);
-            const uniqueId = Date.now().toString() + Math.random().toString(36) + addedCount;
-            try {
-                await callAPI("add", {
-                    originalName: name,
-                    normalizedName: normalized,
-                    leaveType: leaveType,
-                    count: count,
-                    dateStr: getCurrentDateString(),
-                    uniqueId: uniqueId
-                });
-                addedCount++;
-                await new Promise(r => setTimeout(r, 100));
-            } catch(e) { console.error(e); }
+            const uniqueId = Date.now().toString() + Math.random().toString(36);
+            await callAPI("add", { originalName: name, normalizedName: normalized, leaveType, count, dateStr: getCurrentDateString(), uniqueId });
         }
-        
-        // تفريغ الحقول
-        for(let input of nameInputs) { input.value = ''; }
-        
+        nameInputs.forEach(i => i.value = '');
         await loadAllLeaves();
-        alert(`✅ تمت إضافة ${addedCount} إجازة بنجاح`);
+        alert(`✅ تمت إضافة ${names.length} إجازة`);
     }
-    
-    // إضافة فردية
     async function addSingleLeave() {
         if(!isAdmin) { alert("غير مصرح!"); return; }
         const name = document.getElementById('singleName').value.trim();
         const type = document.getElementById('singleType').value;
-        const count = document.getElementById('singleCount').value;
-        if(!name) { alert("أدخل اسم الموظف"); return; }
-        if(!count || count <= 0) { alert("أدخل عدد صحيح"); return; }
-        
+        const count = parseFloat(document.getElementById('singleCount').value);
+        if(!name) { alert("أدخل الاسم"); return; }
+        if(isNaN(count) || count <= 0) { alert("أدخل عدداً صحيحاً"); return; }
         const normalized = getNormalizedName(name);
         const uniqueId = Date.now().toString() + Math.random().toString(36);
         await callAPI("add", { originalName: name, normalizedName: normalized, leaveType: type, count, dateStr: getCurrentDateString(), uniqueId });
-        
         document.getElementById('singleName').value = '';
         document.getElementById('singleCount').value = '1';
         await loadAllLeaves();
-        alert("✅ تمت الإضافة بنجاح");
+        alert("✅ تمت الإضافة");
     }
-
     async function clearAll() {
-        if(!isAdmin) { alert("غير مصرح!"); return; }
-        if(confirm("⚠️ هل أنت متأكد من مسح جميع الإجازات؟")) {
-            await callAPI("clearAll");
-            await loadAllLeaves();
-            alert("تم مسح جميع الإجازات");
-        }
+        if(!isAdmin || !confirm("⚠️ مسح الكل؟")) return;
+        await callAPI("clearAll");
+        await loadAllLeaves();
+        alert("تم المسح");
     }
 
-    // البحث
+    // البحث - عرض الإحصائيات بشكل منفصل (بدون جمع اعتيادية مع رسمية)
     function searchEmployee() {
-        const searchTerm = document.getElementById('searchInput').value.trim();
+        const term = document.getElementById('searchInput').value.trim();
         const resultsDiv = document.getElementById('searchResults');
-        if(!searchTerm) { resultsDiv.style.display = 'none'; return; }
-        const normalizedSearch = getNormalizedName(searchTerm);
+        if(!term) { resultsDiv.style.display = 'none'; return; }
+        const normalizedSearch = getNormalizedName(term);
         const employeeLeaves = leavesArray.filter(l => l.normalizedName === normalizedSearch);
         if(employeeLeaves.length === 0) {
-            resultsDiv.innerHTML = `<div style="text-align:center;color:#c0392b;">❌ لا توجد إجازات للموظف "${escapeHtml(searchTerm)}"</div>`;
-            resultsDiv.style.display = 'block';
-            return;
+            resultsDiv.innerHTML = `<div style="text-align:center;color:#c0392b;">❌ لا توجد إجازات للموظف "${escapeHtml(term)}"</div>`;
+            resultsDiv.style.display = 'block'; return;
         }
+        
+        // حساب الإحصائيات بشكل منفصل
         let totals = { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 };
         employeeLeaves.forEach(l => {
-            let val = parseFloat(l.count);
-            if(isNaN(val)) val = 0;
+            let val = l.count;
             if(l.type === 'اعتيادية') totals.اعتيادية += val;
             else if(l.type === 'مرضية') totals.مرضية += val;
             else if(l.type === 'رسمية') totals.رسمية += val;
             else if(l.type === 'زمنية') totals.زمنية += val;
         });
+        
+        // عرض الإحصائيات بشكل منفصل (كل نوع لوحده)
+        let statsHtml = `
+            <div class="employee-stats">
+                <h4>📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h4>
+                <div class="stats-grid">
+                    <div class="stat-badge">✅ اعتيادية<br><strong>${totals.اعتيادية}</strong> يوم</div>
+                    <div class="stat-badge">🩺 مرضية<br><strong>${totals.مرضية}</strong> يوم</div>
+                    <div class="stat-badge">🏢 رسمية<br><strong>${totals.رسمية}</strong> يوم</div>
+                    <div class="stat-badge">⏱️ زمنية<br><strong>${totals.زمنية}</strong> ساعة</div>
+                </div>
+                <div class="total-separate">
+                    📌 إجمالي الاعتيادية: <strong>${totals.اعتيادية}</strong> يوم &nbsp;&nbsp;|&nbsp;&nbsp;
+                    📌 إجمالي الرسمية: <strong>${totals.رسمية}</strong> يوم &nbsp;&nbsp;|&nbsp;&nbsp;
+                    📌 إجمالي الزمنية: <strong>${totals.زمنية}</strong> ساعة
+                </div>
+            </div>
+        `;
+        
+        // عرض قائمة الإجازات
         let leavesHtml = '';
         employeeLeaves.forEach((l, idx) => {
             let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
             leavesHtml += `<tr><td>${idx+1}</td><td>${escapeHtml(l.type)}</td><td>${l.count} ${unit}</td><td>${escapeHtml(l.dateStr)}</td></tr>`;
         });
-        resultsDiv.innerHTML = `<div class="employee-stats"><h4>📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h4>
-            <div class="stats-grid"><span class="stat-badge">✅ اعتيادية: ${totals.اعتيادية} يوم</span>
-            <span class="stat-badge">🩺 مرضية: ${totals.مرضية} يوم</span>
-            <span class="stat-badge">🏢 رسمية: ${totals.رسمية} يوم</span>
-            <span class="stat-badge">⏱️ زمنية: ${totals.زمنية} ساعة</span>
-            <span class="stat-badge">📌 الإجمالي: ${totals.اعتيادية + totals.مرضية + totals.رسمية} يوم / ${totals.زمنية} ساعة</span></div>
-            <h5>📋 قائمة الإجازات:</h5><div class="table-wrapper"><table><thead><tr><th>#</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>${leavesHtml}</tbody></table></div></div>`;
+        
+        resultsDiv.innerHTML = statsHtml + `
+            <h5>📋 قائمة الإجازات:</h5>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>#</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead>
+                    <tbody>${leavesHtml}</tbody>
+                </table>
+            </div>
+        `;
         resultsDiv.style.display = 'block';
     }
     
@@ -686,35 +320,27 @@
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
     function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
     function login() {
-        const pass = document.getElementById('passwordInput').value;
-        if(pass === ADMIN_PASSWORD) {
-            isAdmin = true;
-            hideLogin();
+        if(document.getElementById('passwordInput').value === ADMIN_PASSWORD) {
+            isAdmin = true; hideLogin();
             document.getElementById('adminPanel').style.display = 'block';
-            document.getElementById('welcomeMsg').innerHTML = '👋 مرحباً بك في لوحة الإدارة - يمكنك إضافة إجابات متعددة دفعة واحدة';
+            document.getElementById('welcomeMsg').innerHTML = '👋 مرحباً بك في لوحة الإدارة';
             loadAllLeaves();
         } else { alert("كلمة المرور غير صحيحة"); }
         document.getElementById('passwordInput').value = '';
     }
-    function logout() {
-        isAdmin = false;
-        document.getElementById('adminPanel').style.display = 'none';
-        document.getElementById('welcomeMsg').innerHTML = '🔍 يمكنك البحث عن موظف لعرض إجازاته وإحصائياته';
-        clearSearch();
-    }
+    function logout() { isAdmin = false; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('welcomeMsg').innerHTML = '🔍 يمكنك البحث'; clearSearch(); }
 
-    document.getElementById('adminBtn').addEventListener('click', showLogin);
-    document.getElementById('loginBtn').addEventListener('click', login);
-    document.getElementById('cancelLoginBtn').addEventListener('click', hideLogin);
-    document.getElementById('searchBtn').addEventListener('click', searchEmployee);
-    document.getElementById('clearSearchBtn').addEventListener('click', clearSearch);
-    document.getElementById('searchInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') searchEmployee(); });
-    document.getElementById('addMultipleBtn').addEventListener('click', addMultipleLeaves);
-    document.getElementById('addSingleBtn').addEventListener('click', addSingleLeave);
-    document.getElementById('refreshBtn').addEventListener('click', () => loadAllLeaves());
-    document.getElementById('clearAllBtn').addEventListener('click', clearAll);
-    document.getElementById('logoutBtn').addEventListener('click', logout);
-    
+    document.getElementById('adminBtn').onclick = showLogin;
+    document.getElementById('loginBtn').onclick = login;
+    document.getElementById('cancelLoginBtn').onclick = hideLogin;
+    document.getElementById('searchBtn').onclick = searchEmployee;
+    document.getElementById('clearSearchBtn').onclick = clearSearch;
+    document.getElementById('searchInput').onkeypress = (e) => { if(e.key === 'Enter') searchEmployee(); };
+    document.getElementById('addMultipleBtn').onclick = addMultipleLeaves;
+    document.getElementById('addSingleBtn').onclick = addSingleLeave;
+    document.getElementById('refreshBtn').onclick = () => loadAllLeaves();
+    document.getElementById('clearAllBtn').onclick = clearAll;
+    document.getElementById('logoutBtn').onclick = logout;
     loadAllLeaves();
 </script>
 </body>
