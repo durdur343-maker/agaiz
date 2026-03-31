@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', 'Tahoma', 'Traditional Arabic', Arial, sans-serif; }
         body { background: linear-gradient(145deg, #e0eaf4 0%, #cfdef3 100%); min-height: 100vh; margin: 0; padding: 20px; display: flex; align-items: center; justify-content: center; }
-        .container { max-width: 1200px; width: 100%; background: rgba(255, 255, 255, 0.95); border-radius: 48px; box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2); padding: 1.5rem; }
+        .container { max-width: 1300px; width: 100%; background: rgba(255, 255, 255, 0.95); border-radius: 48px; box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2); padding: 1.5rem; }
         .header { text-align: center; border-bottom: 3px solid #1e4a76; padding-bottom: 1rem; margin-bottom: 1.2rem; }
         .header h1 { margin: 0; font-size: 1.5rem; color: #0a2f44; }
         .header p { margin: 0.3rem 0 0; color: #2c5a7a; font-size: 0.8rem; }
@@ -21,20 +21,24 @@
         .btn:hover { transform: scale(0.97); }
         .btn-admin { background: #b5651e; }
         .btn-secondary { background: #4b6f8c; }
-        .btn-danger { background: #c0392b; }
         .btn-success { background: #27ae60; }
+        .btn-filter { background: #2980b9; }
         .search-results { background: white; border-radius: 24px; padding: 1rem; margin-top: 1rem; text-align: right; }
-        .employee-stats { background: #eef3fc; border-radius: 20px; padding: 1rem; margin-bottom: 1rem; }
-        .stats-grid { display: flex; flex-wrap: wrap; gap: 1rem; margin: 15px 0; justify-content: flex-start; }
-        .stat-badge { background: white; padding: 10px 20px; border-radius: 50px; font-size: 0.95rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); min-width: 140px; text-align: center; }
-        .stat-badge strong { font-size: 1.2rem; margin-left: 5px; color: #1e4a76; }
-        .total-separate { background: #e8f0fe; padding: 12px 20px; border-radius: 40px; font-size: 0.9rem; margin-top: 10px; text-align: center; border-right: 4px solid #1e4a76; }
+        .employee-stats { background: #eef3fc; border-radius: 20px; padding: 1.2rem; margin-bottom: 1rem; }
+        .stats-list { display: flex; flex-direction: column; gap: 12px; margin: 15px 0; }
+        .stat-item { background: white; padding: 12px 20px; border-radius: 50px; font-size: 1.1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .stat-label { font-weight: bold; color: #2c5a7a; }
+        .stat-value { font-size: 1.3rem; font-weight: bold; color: #1e4a76; }
         .table-wrapper { overflow-x: auto; border-radius: 20px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-top: 15px; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        th { background: #1e4a76; color: white; padding: 8px 6px; }
-        td { padding: 6px 5px; border-bottom: 1px solid #dce5ec; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #1e4a76; color: white; padding: 10px 8px; }
+        td { padding: 8px 6px; border-bottom: 1px solid #dce5ec; }
         .admin-panel { display: none; background: #f8fafd; border-radius: 28px; padding: 1.2rem; margin-top: 1.5rem; border: 2px solid #1e4a76; }
         .admin-title { color: #1e4a76; margin: 0 0 15px 0; font-size: 1.1rem; font-weight: bold; }
+        .filter-section { background: white; border-radius: 24px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #cbdde9; display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
+        .filter-group { flex: 1; min-width: 150px; }
+        .filter-group label { display: block; font-weight: 600; color: #0a3a5a; margin-bottom: 4px; font-size: 0.7rem; }
+        .filter-group input { width: 100%; padding: 8px 12px; border-radius: 25px; border: 1.5px solid #bdd4e2; font-size: 0.85rem; }
         .multi-names-section { background: white; border-radius: 24px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #cbdde9; }
         .names-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }
         .name-field { display: flex; align-items: center; gap: 8px; background: #f8fafd; padding: 5px 10px; border-radius: 40px; border: 1px solid #e2ecf3; }
@@ -49,15 +53,16 @@
         .stats-table-wrapper { background: white; border-radius: 24px; margin-bottom: 1.2rem; overflow-x: auto; }
         .stats-title { background: #eef3fc; padding: 0.5rem 1rem; border-radius: 24px 24px 0 0; font-weight: bold; color: #1e4a76; font-size: 0.9rem; }
         .stats-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
-        .stats-table th { background: #f0f5fa; padding: 6px; }
-        .stats-table td { padding: 5px; text-align: center; }
-        .delete-btn { background: #c0392b; color: white; border: none; border-radius: 20px; padding: 3px 10px; cursor: pointer; font-size: 0.7rem; }
+        .stats-table th { background: #f0f5fa; padding: 8px; }
+        .stats-table td { padding: 6px; text-align: center; }
+        .delete-btn { background: #c0392b; color: white; border: none; border-radius: 20px; padding: 4px 12px; cursor: pointer; font-size: 0.7rem; }
         .login-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
         .login-box { background: white; padding: 1.5rem; border-radius: 30px; text-align: center; width: 280px; }
         .login-box input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 25px; border: 1px solid #ccc; }
         .footer-note { margin-top: 1rem; text-align: center; font-size: 0.65rem; color: #3f627f; border-top: 1px dashed #b9d0e2; padding-top: 0.8rem; }
         .welcome-msg { text-align: center; color: #4b6f8c; font-size: 0.8rem; margin-bottom: 0.8rem; }
-        @media (max-width: 600px) { .container { padding: 1rem; } .names-grid { grid-template-columns: 1fr; } }
+        .filter-badge { background: #e8f0fe; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; display: inline-block; margin-right: 10px; }
+        @media (max-width: 600px) { .container { padding: 1rem; } .names-grid { grid-template-columns: 1fr; } .filter-section { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -72,7 +77,7 @@
 
     <div class="search-section">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 أدخل اسم الموظف (مثال: دريد حامد محمود)">
+            <input type="text" id="searchInput" placeholder="🔍 أدخل اسم الموظف (مثال: علي خالد)">
             <button id="searchBtn" class="btn-secondary btn">بحث</button>
             <button id="clearSearchBtn" class="btn-secondary btn" style="background:#95a5a6;">مسح</button>
             <button id="adminBtn" class="btn-admin btn">🔐 إدارة</button>
@@ -82,6 +87,24 @@
 
     <div id="adminPanel" class="admin-panel">
         <div class="admin-title">⚙️ لوحة الإدارة - إضافة متعددة</div>
+        
+        <!-- قسم الفلتر حسب التاريخ -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>📅 من تاريخ</label>
+                <input type="date" id="filterFromDate">
+            </div>
+            <div class="filter-group">
+                <label>📅 إلى تاريخ</label>
+                <input type="date" id="filterToDate">
+            </div>
+            <div class="filter-group">
+                <button id="applyFilterBtn" class="btn-filter btn">🔍 تصفية</button>
+                <button id="clearFilterBtn" class="btn-secondary btn" style="background:#95a5a6;">🗑️ إلغاء التصفية</button>
+            </div>
+            <div id="filterStatus" class="filter-badge" style="background:#f0f0f0;"></div>
+        </div>
+        
         <div class="multi-names-section">
             <div class="multi-names-title">📝 إضافة عدة موظفين بنفس نوع الإجازة والعدد</div>
             <div class="names-grid" id="namesGrid">
@@ -107,19 +130,17 @@
             </div>
         </div>
         <div class="actions-bar">
-            <button id="refreshBtn" class="btn-secondary btn">🔄 تحديث</button>
-            <button id="clearAllBtn" class="btn-danger btn">🗑️ مسح الكل</button>
-            <button id="logoutBtn" class="btn-secondary btn" style="background:#7f8c8d;">🚪 خروج</button>
+            <button id="refreshBtn" class="btn-secondary btn">🔄 تحديث البيانات</button>
+            <button id="logoutBtn" class="btn-secondary btn" style="background:#7f8c8d;">🚪 خروج من الإدارة</button>
         </div>
         <div class="stats-full">
             <div class="stats-table-wrapper"><div class="stats-title">📈 إحصائيات الإجازات لكل موظف</div>
             <table class="stats-table"><thead>验<th>الموظف</th><th>✅ اعتيادية</th><th>🩺 مرضية</th><th>🏢 رسمية</th><th>⏱️ زمنية</th><th>📊 الإجمالي</th>验</thead>
             <tbody id="statsTableBody">...</tbody>}</div>
         </div>
-        <div class="table-wrapper">\t<table><thead><tr><th>#</th><th>الاسم</th><th>الاسم الموحد</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="adminTableBody"></tbody></table></div>
+        <div class="table-wrapper">\t表格<thead>验<th>#</th><th>الاسم</th><th>الاسم الموحد</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th>验</thead><tbody id="adminTableBody"></tbody>}</div>
     </div>
-    <div class="footer-note">✅ فكرة وتصميم ذاتية القسم
-    تواريخ قبل 28\3\2026 غير موجودة</div>
+    <div class="footer-note">✅ البيانات محفوظة في Google Sheets · كلمة المرور: admin</div>
 </div>
 <div id="loginOverlay" class="login-overlay"><div class="login-box"><h3>🔐 الدخول</h3><input type="password" id="passwordInput"><button id="loginBtn" class="btn" style="width:100%;">تأكيد</button><button id="cancelLoginBtn" class="btn-secondary btn" style="width:100%; margin-top:8px;">إلغاء</button></div></div>
 
@@ -127,7 +148,51 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbyYqrwKQCK62NXfUwDHvAJai6QyXmVtQ0juulYbiNTkpbKxZPIGTTsMSIjcUHByY4YLEw/exec";
     const ADMIN_PASSWORD = "admin";
     let leavesArray = [];
+    let filteredLeaves = [];
     let isAdmin = false;
+    let activeFilter = { fromDate: null, toDate: null };
+
+    // تحويل التاريخ النصي إلى كائن Date للمقارنة
+    function parseDateToCompare(dateString) {
+        if (!dateString) return null;
+        try {
+            // محاولة استخراج التاريخ من صيغ مختلفة
+            let match = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
+            if (match) {
+                return new Date(match[1], match[2]-1, match[3]);
+            }
+            match = dateString.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+            if (match) {
+                return new Date(match[3], match[2]-1, match[1]);
+            }
+            let date = new Date(dateString);
+            if (!isNaN(date.getTime())) return date;
+        } catch(e) {}
+        return null;
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return "غير محدد";
+        try {
+            let date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                const match = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
+                if (match) {
+                    date = new Date(match[1], match[2]-1, match[3]);
+                } else {
+                    return dateString;
+                }
+            }
+            const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const dayName = weekdays[date.getDay()];
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `${dayName}، ${day}/${month}/${year}`;
+        } catch(e) {
+            return dateString;
+        }
+    }
 
     function extractNumber(value) {
         if (value === undefined || value === null) return 0;
@@ -145,12 +210,25 @@
 
     function updateDate() {
         const today = new Date();
-        const formatted = today.toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'numeric', day:'numeric' });
-        document.getElementById('currentDate').innerText = formatted;
+        const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        const dayName = weekdays[today.getDay()];
+        const day = today.getDate();
+        const month = today.getMonth() + 1;
+        const year = today.getFullYear();
+        document.getElementById('currentDate').innerText = `${dayName}، ${day}/${month}/${year}`;
     }
     updateDate();
     setInterval(updateDate, 60000);
-    function getCurrentDateString() { return new Date().toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'numeric', day:'numeric' }); }
+    
+    function getCurrentDateString() { 
+        const today = new Date();
+        const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        const dayName = weekdays[today.getDay()];
+        const day = today.getDate();
+        const month = today.getMonth() + 1;
+        const year = today.getFullYear();
+        return `${dayName}، ${day}/${month}/${year}`;
+    }
 
     async function callAPI(action, data = {}) {
         const params = new URLSearchParams({ action, ...data });
@@ -160,19 +238,59 @@
         return await response.json();
     }
 
+    // تطبيق الفلتر على البيانات
+    function applyFilterToLeaves() {
+        if (!activeFilter.fromDate && !activeFilter.toDate) {
+            filteredLeaves = [...leavesArray];
+            document.getElementById('filterStatus').innerHTML = '';
+            return;
+        }
+        
+        filteredLeaves = leavesArray.filter(leave => {
+            const leaveDate = parseDateToCompare(leave.dateStr);
+            if (!leaveDate) return true;
+            
+            if (activeFilter.fromDate && activeFilter.toDate) {
+                return leaveDate >= activeFilter.fromDate && leaveDate <= activeFilter.toDate;
+            } else if (activeFilter.fromDate) {
+                return leaveDate >= activeFilter.fromDate;
+            } else if (activeFilter.toDate) {
+                return leaveDate <= activeFilter.toDate;
+            }
+            return true;
+        });
+        
+        let statusText = '';
+        if (activeFilter.fromDate) {
+            const from = activeFilter.fromDate;
+            statusText += `من ${from.getDate()}/${from.getMonth()+1}/${from.getFullYear()} `;
+        }
+        if (activeFilter.toDate) {
+            const to = activeFilter.toDate;
+            statusText += `إلى ${to.getDate()}/${to.getMonth()+1}/${to.getFullYear()}`;
+        }
+        document.getElementById('filterStatus').innerHTML = `📌 مصفى: ${statusText} (${filteredLeaves.length} إجازة)`;
+    }
+
     async function loadAllLeaves() {
         try {
             const result = await callAPI("getAll");
             if(result.success) {
-                leavesArray = (result.leaves || []).map(l => ({ ...l, count: extractNumber(l.count) }));
+                leavesArray = (result.leaves || []).map(l => ({ 
+                    ...l, 
+                    count: extractNumber(l.count),
+                    dateStr: l.dateStr
+                }));
+                applyFilterToLeaves();
                 if(isAdmin) { renderAdminStats(); renderAdminTable(); }
             }
         } catch(error) { console.error(error); document.getElementById('connectionStatus').innerHTML = '🔴 خطأ في الاتصال'; }
     }
 
     function renderAdminStats() {
+        const dataToUse = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
         const statsMap = new Map();
-        for(let leave of leavesArray) {
+        for(let leave of dataToUse) {
             const normName = leave.normalizedName;
             const type = leave.type;
             let val = leave.count;
@@ -184,34 +302,47 @@
             else if(type === 'زمنية') record.زمنية += val;
         }
         const tbody = document.getElementById('statsTableBody');
-        if(statsMap.size === 0) { tbody.innerHTML = '<tr><td colspan="6">لا توجد بيانات</td></tr>'; return; }
+        if(statsMap.size === 0) { tbody.innerHTML = '发展<td colspan="6">لا توجد بيانات</tr>'; return; }
         let rows = '';
         for(let [name, data] of statsMap.entries()) {
             let totalDays = data.اعتيادية + data.مرضية + data.رسمية;
             rows += `<tr><td style="font-weight:bold;">${escapeHtml(name)}</td>
-                      <td>${data.اعتيادية}</td><td>${data.مرضية}</td>
-                      <td>${data.رسمية}</td><td>${data.زمنية}</td>
-                      <td>${totalDays} يوم / ${data.زمنية} ساعة</td></tr>`;
+                        <td>${data.اعتيادية}</td><td>${data.مرضية}</td>
+                        <td>${data.رسمية}</td><td>${data.زمنية}</td>
+                        <td>${totalDays} يوم / ${data.زمنية} ساعة</td></tr>`;
         }
         tbody.innerHTML = rows;
     }
 
     function renderAdminTable() {
+        const dataToUse = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
         const tbody = document.getElementById('adminTableBody');
-        if(!leavesArray.length) { tbody.innerHTML = '<tr><td colspan="7">لا توجد إجازات</td></tr>'; return; }
+        if(!dataToUse.length) { 
+            tbody.innerHTML = '<tr><td colspan="7">لا توجد إجازات في هذا النطاق الزمني</td></tr>'; 
+            return; 
+        }
         let html = '';
-        leavesArray.forEach((item, idx) => {
+        dataToUse.forEach((item, idx) => {
             let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم';
-            html += `<tr><td>${idx+1}</td><td>${escapeHtml(item.originalName)}</td><td>${escapeHtml(item.normalizedName)}</td>
-                      <td>${escapeHtml(item.type)}</td><td>${item.count} ${unit}</td>
-                      <td>${escapeHtml(item.dateStr)}</td>
-                      <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td></tr>`;
+            let formattedDate = formatDate(item.dateStr);
+            html += `<tr>
+                        <td>${idx+1}</td>
+                        <td>${escapeHtml(item.originalName)}</td>
+                        <td>${escapeHtml(item.normalizedName)}</td>
+                        <td>${escapeHtml(item.type)}</td>
+                        <td>${item.count} ${unit}</td>
+                        <td>${escapeHtml(formattedDate)}</td>
+                        <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td>
+                      </tr>`;
         });
         tbody.innerHTML = html;
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const id = btn.getAttribute('data-id');
-                if(confirm("حذف الإجازة؟")) { await callAPI("delete", { id: id }); await loadAllLeaves(); }
+                if(confirm("حذف الإجازة؟")) { 
+                    await callAPI("delete", { id: id }); 
+                    await loadAllLeaves(); 
+                }
             });
         });
     }
@@ -233,6 +364,7 @@
         await loadAllLeaves();
         alert(`✅ تمت إضافة ${names.length} إجازة`);
     }
+    
     async function addSingleLeave() {
         if(!isAdmin) { alert("غير مصرح!"); return; }
         const name = document.getElementById('singleName').value.trim();
@@ -248,26 +380,48 @@
         await loadAllLeaves();
         alert("✅ تمت الإضافة");
     }
-    async function clearAll() {
-        if(!isAdmin || !confirm("⚠️ مسح الكل؟")) return;
-        await callAPI("clearAll");
-        await loadAllLeaves();
-        alert("تم المسح");
+
+    function applyFilter() {
+        const fromDateValue = document.getElementById('filterFromDate').value;
+        const toDateValue = document.getElementById('filterToDate').value;
+        
+        activeFilter.fromDate = fromDateValue ? new Date(fromDateValue) : null;
+        activeFilter.toDate = toDateValue ? new Date(toDateValue) : null;
+        
+        if (activeFilter.fromDate) activeFilter.fromDate.setHours(0,0,0,0);
+        if (activeFilter.toDate) activeFilter.toDate.setHours(23,59,59,999);
+        
+        applyFilterToLeaves();
+        if(isAdmin) {
+            renderAdminStats();
+            renderAdminTable();
+        }
+    }
+    
+    function clearFilter() {
+        document.getElementById('filterFromDate').value = '';
+        document.getElementById('filterToDate').value = '';
+        activeFilter = { fromDate: null, toDate: null };
+        filteredLeaves = [];
+        document.getElementById('filterStatus').innerHTML = '';
+        if(isAdmin) {
+            renderAdminStats();
+            renderAdminTable();
+        }
     }
 
-    // البحث - عرض الإحصائيات بشكل منفصل (بدون جمع اعتيادية مع رسمية)
     function searchEmployee() {
         const term = document.getElementById('searchInput').value.trim();
         const resultsDiv = document.getElementById('searchResults');
         if(!term) { resultsDiv.style.display = 'none'; return; }
         const normalizedSearch = getNormalizedName(term);
-        const employeeLeaves = leavesArray.filter(l => l.normalizedName === normalizedSearch);
+        const dataToSearch = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
+        const employeeLeaves = dataToSearch.filter(l => l.normalizedName === normalizedSearch);
         if(employeeLeaves.length === 0) {
-            resultsDiv.innerHTML = `<div style="text-align:center;color:#c0392b;">❌ لا توجد إجازات للموظف "${escapeHtml(term)}"</div>`;
+            resultsDiv.innerHTML = `<div style="text-align:center;color:#c0392b;padding:20px;">❌ لا توجد إجازات للموظف "${escapeHtml(term)}"</div>`;
             resultsDiv.style.display = 'block'; return;
         }
         
-        // حساب الإحصائيات بشكل منفصل
         let totals = { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 };
         employeeLeaves.forEach(l => {
             let val = l.count;
@@ -277,39 +431,27 @@
             else if(l.type === 'زمنية') totals.زمنية += val;
         });
         
-        // عرض الإحصائيات بشكل منفصل (كل نوع لوحده)
         let statsHtml = `
             <div class="employee-stats">
-                <h4>📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h4>
-                <div class="stats-grid">
-                    <div class="stat-badge">✅ اعتيادية<br><strong>${totals.اعتيادية}</strong> يوم</div>
-                    <div class="stat-badge">🩺 مرضية<br><strong>${totals.مرضية}</strong> يوم</div>
-                    <div class="stat-badge">🏢 رسمية<br><strong>${totals.رسمية}</strong> يوم</div>
-                    <div class="stat-badge">⏱️ زمنية<br><strong>${totals.زمنية}</strong> ساعة</div>
-                </div>
-                <div class="total-separate">
-                    📌 إجمالي الاعتيادية: <strong>${totals.اعتيادية}</strong> يوم &nbsp;&nbsp;|&nbsp;&nbsp;
-                    📌 إجمالي الرسمية: <strong>${totals.رسمية}</strong> يوم &nbsp;&nbsp;|&nbsp;&nbsp;
-                    📌 إجمالي الزمنية: <strong>${totals.زمنية}</strong> ساعة
+                <h3 style="color:#1e4a76; margin-bottom:15px; text-align:center;">📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h3>
+                <div class="stats-list">
+                    <div class="stat-item"><span class="stat-label">✅ الاعتيادية الكلية:</span><span class="stat-value">${totals.اعتيادية} يوم</span></div>
+                    <div class="stat-item"><span class="stat-label">🏢 الرسمية الكلية:</span><span class="stat-value">${totals.رسمية} يوم</span></div>
+                    <div class="stat-item"><span class="stat-label">⏱️ الزمنية الكلية:</span><span class="stat-value">${totals.زمنية} ساعة</span></div>
                 </div>
             </div>
         `;
         
-        // عرض قائمة الإجازات
         let leavesHtml = '';
         employeeLeaves.forEach((l, idx) => {
             let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
-            leavesHtml += `<tr><td>${idx+1}</td><td>${escapeHtml(l.type)}</td><td>${l.count} ${unit}</td><td>${escapeHtml(l.dateStr)}</td></tr>`;
+            let formattedDate = formatDate(l.dateStr);
+            leavesHtml += `<tr><td>${idx+1}</td><td>${escapeHtml(l.type)}</td><td>${l.count} ${unit}</td><td>${escapeHtml(formattedDate)}</td></tr>`;
         });
         
         resultsDiv.innerHTML = statsHtml + `
-            <h5>📋 قائمة الإجازات:</h5>
-            <div class="table-wrapper">
-                <table>
-                    <thead><tr><th>#</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead>
-                    <tbody>${leavesHtml}</tbody>
-                </table>
-            </div>
+            <h5 style="margin:15px 0 10px 0;">📋 قائمة الإجازات:</h5>
+            <div class="table-wrapper"><table><thead><tr><th>#</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>${leavesHtml}</tbody></table></div>
         `;
         resultsDiv.style.display = 'block';
     }
@@ -339,8 +481,9 @@
     document.getElementById('addMultipleBtn').onclick = addMultipleLeaves;
     document.getElementById('addSingleBtn').onclick = addSingleLeave;
     document.getElementById('refreshBtn').onclick = () => loadAllLeaves();
-    document.getElementById('clearAllBtn').onclick = clearAll;
     document.getElementById('logoutBtn').onclick = logout;
+    document.getElementById('applyFilterBtn').onclick = applyFilter;
+    document.getElementById('clearFilterBtn').onclick = clearFilter;
     loadAllLeaves();
 </script>
 </body>
