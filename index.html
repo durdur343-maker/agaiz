@@ -88,7 +88,6 @@
     <div id="adminPanel" class="admin-panel">
         <div class="admin-title">⚙️ لوحة الإدارة - إضافة متعددة</div>
         
-        <!-- قسم الفلتر حسب التاريخ -->
         <div class="filter-section">
             <div class="filter-group">
                 <label>📅 من تاريخ</label>
@@ -107,7 +106,7 @@
         
         <div class="multi-names-section">
             <div class="multi-names-title">📝 إضافة عدة موظفين بنفس نوع الإجازة والعدد</div>
-            <div class="names-grid" id="namesGrid">
+            <div class="names-grid">
                 <div class="name-field"><span>1.</span><input type="text" class="multi-name" placeholder="اسم الموظف الأول"></div>
                 <div class="name-field"><span>2.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثاني"></div>
                 <div class="name-field"><span>3.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثالث"></div>
@@ -135,356 +134,317 @@
         </div>
         <div class="stats-full">
             <div class="stats-table-wrapper"><div class="stats-title">📈 إحصائيات الإجازات لكل موظف</div>
-            <table class="stats-table"><thead>验<th>الموظف</th><th>✅ اعتيادية</th><th>🩺 مرضية</th><th>🏢 رسمية</th><th>⏱️ زمنية</th><th>📊 الإجمالي</th>验</thead>
-            <tbody id="statsTableBody">...</tbody>}</div>
+            <table class="stats-table"><thead><tr><th>الموظف</th><th>✅ اعتيادية</th><th>🩺 مرضية</th><th>🏢 رسمية</th><th>⏱️ زمنية</th><th>📊 الإجمالي</th></tr></thead>
+            <tbody id="statsTableBody">...</tbody></table></div>
         </div>
-        <div class="table-wrapper">\t表格<thead>验<th>#</th><th>الاسم</th><th>الاسم الموحد</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th>验</thead><tbody id="adminTableBody"></tbody>}</div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>الاسم</th><th>الاسم الموحد</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="adminTableBody"></tbody></table></div>
     </div>
     <div class="footer-note">✅ البيانات محفوظة في Google Sheets · كلمة المرور: admin</div>
 </div>
-<div id="loginOverlay" class="login-overlay"><div class="login-box"><h3>🔐 الدخول</h3><input type="password" id="passwordInput"><button id="loginBtn" class="btn" style="width:100%;">تأكيد</button><button id="cancelLoginBtn" class="btn-secondary btn" style="width:100%; margin-top:8px;">إلغاء</button></div></div>
+
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+        <h3>🔐 الدخول إلى لوحة الإدارة</h3>
+        <input type="password" id="passwordInput" placeholder="كلمة المرور">
+        <button id="loginBtn" class="btn" style="width:100%; margin-top:10px;">تأكيد</button>
+        <button id="cancelLoginBtn" class="btn-secondary btn" style="width:100%; margin-top:8px;">إلغاء</button>
+    </div>
+</div>
 
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyYqrwKQCK62NXfUwDHvAJai6QyXmVtQ0juulYbiNTkpbKxZPIGTTsMSIjcUHByY4YLEw/exec";
-    const ADMIN_PASSWORD = "admin";
-    let leavesArray = [];
-    let filteredLeaves = [];
-    let isAdmin = false;
-    let activeFilter = { fromDate: null, toDate: null };
+    (function() {
+        const API_URL = "https://script.google.com/macros/s/AKfycbyYqrwKQCK62NXfUwDHvAJai6QyXmVtQ0juulYbiNTkpbKxZPIGTTsMSIjcUHByY4YLEw/exec";
+        const ADMIN_PASSWORD = "admin";
+        
+        let leavesArray = [];
+        let filteredLeaves = [];
+        let isAdmin = false;
+        let activeFilter = { fromDate: null, toDate: null };
 
-    // تحويل التاريخ النصي إلى كائن Date للمقارنة
-    function parseDateToCompare(dateString) {
-        if (!dateString) return null;
-        try {
-            // محاولة استخراج التاريخ من صيغ مختلفة
-            let match = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
-            if (match) {
-                return new Date(match[1], match[2]-1, match[3]);
-            }
-            match = dateString.match(/(\d{2})\/(\d{2})\/(\d{4})/);
-            if (match) {
-                return new Date(match[3], match[2]-1, match[1]);
-            }
-            let date = new Date(dateString);
-            if (!isNaN(date.getTime())) return date;
-        } catch(e) {}
-        return null;
-    }
+        // Helper functions
+        function parseDateToCompare(dateString) {
+            if (!dateString) return null;
+            try {
+                let match = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
+                if (match) return new Date(match[1], match[2]-1, match[3]);
+                match = dateString.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+                if (match) return new Date(match[3], match[2]-1, match[1]);
+                let date = new Date(dateString);
+                if (!isNaN(date.getTime())) return date;
+            } catch(e) {}
+            return null;
+        }
 
-    function formatDate(dateString) {
-        if (!dateString) return "غير محدد";
-        try {
-            let date = new Date(dateString);
-            if (isNaN(date.getTime())) {
-                const match = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
-                if (match) {
-                    date = new Date(match[1], match[2]-1, match[3]);
-                } else {
-                    return dateString;
+        function formatDate(dateString) {
+            if (!dateString) return "غير محدد";
+            try {
+                let date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    const match = dateString.match(/(\d{4})-(\d{2})-(\d{2})/);
+                    if (match) date = new Date(match[1], match[2]-1, match[3]);
+                    else return dateString;
                 }
-            }
+                const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                const dayName = weekdays[date.getDay()];
+                return `${dayName}، ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+            } catch(e) { return dateString; }
+        }
+
+        function extractNumber(value) {
+            if (!value && value !== 0) return 0;
+            if (typeof value === 'number') return value;
+            let num = parseFloat(value.toString().replace(/[^0-9.-]/g, ''));
+            return isNaN(num) ? 0 : num;
+        }
+
+        function getNormalizedName(fullName) {
+            if(!fullName) return "";
+            const parts = fullName.trim().split(/\s+/);
+            return parts.length === 1 ? parts[0] : parts[0] + " " + parts[1];
+        }
+
+        function updateDate() {
+            const today = new Date();
             const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-            const dayName = weekdays[date.getDay()];
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
-            return `${dayName}، ${day}/${month}/${year}`;
-        } catch(e) {
-            return dateString;
+            document.getElementById('currentDate').innerText = `${weekdays[today.getDay()]}، ${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
         }
-    }
-
-    function extractNumber(value) {
-        if (value === undefined || value === null) return 0;
-        if (typeof value === 'number') return value;
-        let num = parseFloat(value.toString().replace(/[^0-9.-]/g, ''));
-        return isNaN(num) ? 0 : num;
-    }
-
-    function getNormalizedName(fullName) {
-        if(!fullName) return "";
-        const parts = fullName.trim().split(/\s+/);
-        if(parts.length === 1) return parts[0];
-        return parts[0] + " " + parts[1];
-    }
-
-    function updateDate() {
-        const today = new Date();
-        const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-        const dayName = weekdays[today.getDay()];
-        const day = today.getDate();
-        const month = today.getMonth() + 1;
-        const year = today.getFullYear();
-        document.getElementById('currentDate').innerText = `${dayName}، ${day}/${month}/${year}`;
-    }
-    updateDate();
-    setInterval(updateDate, 60000);
-    
-    function getCurrentDateString() { 
-        const today = new Date();
-        const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-        const dayName = weekdays[today.getDay()];
-        const day = today.getDate();
-        const month = today.getMonth() + 1;
-        const year = today.getFullYear();
-        return `${dayName}، ${day}/${month}/${year}`;
-    }
-
-    async function callAPI(action, data = {}) {
-        const params = new URLSearchParams({ action, ...data });
-        const url = `${API_URL}?${params.toString()}`;
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return await response.json();
-    }
-
-    // تطبيق الفلتر على البيانات
-    function applyFilterToLeaves() {
-        if (!activeFilter.fromDate && !activeFilter.toDate) {
-            filteredLeaves = [...leavesArray];
-            document.getElementById('filterStatus').innerHTML = '';
-            return;
-        }
+        updateDate();
+        setInterval(updateDate, 60000);
         
-        filteredLeaves = leavesArray.filter(leave => {
-            const leaveDate = parseDateToCompare(leave.dateStr);
-            if (!leaveDate) return true;
-            
-            if (activeFilter.fromDate && activeFilter.toDate) {
-                return leaveDate >= activeFilter.fromDate && leaveDate <= activeFilter.toDate;
-            } else if (activeFilter.fromDate) {
-                return leaveDate >= activeFilter.fromDate;
-            } else if (activeFilter.toDate) {
-                return leaveDate <= activeFilter.toDate;
-            }
-            return true;
-        });
-        
-        let statusText = '';
-        if (activeFilter.fromDate) {
-            const from = activeFilter.fromDate;
-            statusText += `من ${from.getDate()}/${from.getMonth()+1}/${from.getFullYear()} `;
+        function getCurrentDateString() { 
+            const today = new Date();
+            const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            return `${weekdays[today.getDay()]}، ${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
         }
-        if (activeFilter.toDate) {
-            const to = activeFilter.toDate;
-            statusText += `إلى ${to.getDate()}/${to.getMonth()+1}/${to.getFullYear()}`;
-        }
-        document.getElementById('filterStatus').innerHTML = `📌 مصفى: ${statusText} (${filteredLeaves.length} إجازة)`;
-    }
 
-    async function loadAllLeaves() {
-        try {
-            const result = await callAPI("getAll");
-            if(result.success) {
-                leavesArray = (result.leaves || []).map(l => ({ 
-                    ...l, 
-                    count: extractNumber(l.count),
-                    dateStr: l.dateStr
-                }));
-                applyFilterToLeaves();
-                if(isAdmin) { renderAdminStats(); renderAdminTable(); }
-            }
-        } catch(error) { console.error(error); document.getElementById('connectionStatus').innerHTML = '🔴 خطأ في الاتصال'; }
-    }
-
-    function renderAdminStats() {
-        const dataToUse = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
-        const statsMap = new Map();
-        for(let leave of dataToUse) {
-            const normName = leave.normalizedName;
-            const type = leave.type;
-            let val = leave.count;
-            if(!statsMap.has(normName)) statsMap.set(normName, { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 });
-            const record = statsMap.get(normName);
-            if(type === 'اعتيادية') record.اعتيادية += val;
-            else if(type === 'مرضية') record.مرضية += val;
-            else if(type === 'رسمية') record.رسمية += val;
-            else if(type === 'زمنية') record.زمنية += val;
+        async function callAPI(action, data = {}) {
+            const params = new URLSearchParams({ action, ...data });
+            const url = `${API_URL}?${params.toString()}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
         }
-        const tbody = document.getElementById('statsTableBody');
-        if(statsMap.size === 0) { tbody.innerHTML = '发展<td colspan="6">لا توجد بيانات</tr>'; return; }
-        let rows = '';
-        for(let [name, data] of statsMap.entries()) {
-            let totalDays = data.اعتيادية + data.مرضية + data.رسمية;
-            rows += `<tr><td style="font-weight:bold;">${escapeHtml(name)}</td>
+
+        function applyFilterToLeaves() {
+            if (!activeFilter.fromDate && !activeFilter.toDate) {
+                filteredLeaves = [...leavesArray];
+                document.getElementById('filterStatus').innerHTML = '';
+                return;
+            }
+            filteredLeaves = leavesArray.filter(leave => {
+                const leaveDate = parseDateToCompare(leave.dateStr);
+                if (!leaveDate) return true;
+                if (activeFilter.fromDate && activeFilter.toDate) return leaveDate >= activeFilter.fromDate && leaveDate <= activeFilter.toDate;
+                if (activeFilter.fromDate) return leaveDate >= activeFilter.fromDate;
+                if (activeFilter.toDate) return leaveDate <= activeFilter.toDate;
+                return true;
+            });
+            let statusText = '';
+            if (activeFilter.fromDate) statusText += `من ${activeFilter.fromDate.getDate()}/${activeFilter.fromDate.getMonth()+1}/${activeFilter.fromDate.getFullYear()} `;
+            if (activeFilter.toDate) statusText += `إلى ${activeFilter.toDate.getDate()}/${activeFilter.toDate.getMonth()+1}/${activeFilter.toDate.getFullYear()}`;
+            document.getElementById('filterStatus').innerHTML = `📌 مصفى: ${statusText} (${filteredLeaves.length} إجازة)`;
+        }
+
+        async function loadAllLeaves() {
+            try {
+                const result = await callAPI("getAll");
+                if(result.success) {
+                    leavesArray = (result.leaves || []).map(l => ({ ...l, count: extractNumber(l.count), dateStr: l.dateStr }));
+                    applyFilterToLeaves();
+                    if(isAdmin) { renderAdminStats(); renderAdminTable(); }
+                }
+            } catch(error) { 
+                console.error(error); 
+                document.getElementById('connectionStatus').innerHTML = '🔴 خطأ في الاتصال';
+            }
+        }
+
+        function renderAdminStats() {
+            const dataToUse = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
+            const statsMap = new Map();
+            for(let leave of dataToUse) {
+                const normName = leave.normalizedName;
+                if(!statsMap.has(normName)) statsMap.set(normName, { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 });
+                const record = statsMap.get(normName);
+                if(leave.type === 'اعتيادية') record.اعتيادية += leave.count;
+                else if(leave.type === 'مرضية') record.مرضية += leave.count;
+                else if(leave.type === 'رسمية') record.رسمية += leave.count;
+                else if(leave.type === 'زمنية') record.زمنية += leave.count;
+            }
+            const tbody = document.getElementById('statsTableBody');
+            if(statsMap.size === 0) { tbody.innerHTML = '<tr><td colspan="6">لا توجد بيانات</td></tr>'; return; }
+            let rows = '';
+            for(let [name, data] of statsMap.entries()) {
+                let totalDays = data.اعتيادية + data.مرضية + data.رسمية;
+                rows += `<tr><td style="font-weight:bold;">${escapeHtml(name)}</td>
                         <td>${data.اعتيادية}</td><td>${data.مرضية}</td>
                         <td>${data.رسمية}</td><td>${data.زمنية}</td>
                         <td>${totalDays} يوم / ${data.زمنية} ساعة</td></tr>`;
+            }
+            tbody.innerHTML = rows;
         }
-        tbody.innerHTML = rows;
-    }
 
-    function renderAdminTable() {
-        const dataToUse = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
-        const tbody = document.getElementById('adminTableBody');
-        if(!dataToUse.length) { 
-            tbody.innerHTML = '<tr><td colspan="7">لا توجد إجازات في هذا النطاق الزمني</td></tr>'; 
-            return; 
-        }
-        let html = '';
-        dataToUse.forEach((item, idx) => {
-            let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم';
-            let formattedDate = formatDate(item.dateStr);
-            html += `<tr>
-                        <td>${idx+1}</td>
-                        <td>${escapeHtml(item.originalName)}</td>
-                        <td>${escapeHtml(item.normalizedName)}</td>
-                        <td>${escapeHtml(item.type)}</td>
-                        <td>${item.count} ${unit}</td>
-                        <td>${escapeHtml(formattedDate)}</td>
-                        <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td>
-                      </tr>`;
-        });
-        tbody.innerHTML = html;
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const id = btn.getAttribute('data-id');
-                if(confirm("حذف الإجازة؟")) { 
-                    await callAPI("delete", { id: id }); 
-                    await loadAllLeaves(); 
-                }
+        function renderAdminTable() {
+            const dataToUse = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
+            const tbody = document.getElementById('adminTableBody');
+            if(!dataToUse.length) { tbody.innerHTML = '<tr><td colspan="7">لا توجد إجازات في هذا النطاق الزمني</td></tr>'; return; }
+            let html = '';
+            dataToUse.forEach((item, idx) => {
+                let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم';
+                html += `<tr>
+                            <td>${idx+1}</td>
+                            <td>${escapeHtml(item.originalName)}</td>
+                            <td>${escapeHtml(item.normalizedName)}</td>
+                            <td>${escapeHtml(item.type)}</td>
+                            <td>${item.count} ${unit}</td>
+                            <td>${escapeHtml(formatDate(item.dateStr))}</td>
+                            <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td>
+                        </tr>`;
             });
-        });
-    }
+            tbody.innerHTML = html;
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = btn.getAttribute('data-id');
+                    if(confirm("حذف الإجازة؟")) { 
+                        await callAPI("delete", { id: id }); 
+                        await loadAllLeaves(); 
+                    }
+                });
+            });
+        }
 
-    async function addMultipleLeaves() {
-        if(!isAdmin) { alert("غير مصرح!"); return; }
-        const nameInputs = document.querySelectorAll('.multi-name');
-        const leaveType = document.getElementById('multiLeaveType').value;
-        const count = parseFloat(document.getElementById('multiLeaveCount').value);
-        if(isNaN(count) || count <= 0) { alert("أدخل عدداً صحيحاً"); return; }
-        const names = Array.from(nameInputs).map(i => i.value.trim()).filter(n => n !== "");
-        if(names.length === 0) { alert("أدخل اسم واحد على الأقل"); return; }
-        for(let name of names) {
+        async function addMultipleLeaves() {
+            if(!isAdmin) { alert("غير مصرح!"); return; }
+            const nameInputs = document.querySelectorAll('.multi-name');
+            const leaveType = document.getElementById('multiLeaveType').value;
+            const count = parseFloat(document.getElementById('multiLeaveCount').value);
+            if(isNaN(count) || count <= 0) { alert("أدخل عدداً صحيحاً"); return; }
+            const names = Array.from(nameInputs).map(i => i.value.trim()).filter(n => n !== "");
+            if(names.length === 0) { alert("أدخل اسم واحد على الأقل"); return; }
+            for(let name of names) {
+                const normalized = getNormalizedName(name);
+                const uniqueId = Date.now().toString() + Math.random().toString(36);
+                await callAPI("add", { originalName: name, normalizedName: normalized, leaveType, count, dateStr: getCurrentDateString(), uniqueId });
+            }
+            nameInputs.forEach(i => i.value = '');
+            await loadAllLeaves();
+            alert(`✅ تمت إضافة ${names.length} إجازة`);
+        }
+        
+        async function addSingleLeave() {
+            if(!isAdmin) { alert("غير مصرح!"); return; }
+            const name = document.getElementById('singleName').value.trim();
+            const type = document.getElementById('singleType').value;
+            const count = parseFloat(document.getElementById('singleCount').value);
+            if(!name) { alert("أدخل الاسم"); return; }
+            if(isNaN(count) || count <= 0) { alert("أدخل عدداً صحيحاً"); return; }
             const normalized = getNormalizedName(name);
             const uniqueId = Date.now().toString() + Math.random().toString(36);
-            await callAPI("add", { originalName: name, normalizedName: normalized, leaveType, count, dateStr: getCurrentDateString(), uniqueId });
+            await callAPI("add", { originalName: name, normalizedName: normalized, leaveType: type, count, dateStr: getCurrentDateString(), uniqueId });
+            document.getElementById('singleName').value = '';
+            document.getElementById('singleCount').value = '1';
+            await loadAllLeaves();
+            alert("✅ تمت الإضافة");
         }
-        nameInputs.forEach(i => i.value = '');
-        await loadAllLeaves();
-        alert(`✅ تمت إضافة ${names.length} إجازة`);
-    }
-    
-    async function addSingleLeave() {
-        if(!isAdmin) { alert("غير مصرح!"); return; }
-        const name = document.getElementById('singleName').value.trim();
-        const type = document.getElementById('singleType').value;
-        const count = parseFloat(document.getElementById('singleCount').value);
-        if(!name) { alert("أدخل الاسم"); return; }
-        if(isNaN(count) || count <= 0) { alert("أدخل عدداً صحيحاً"); return; }
-        const normalized = getNormalizedName(name);
-        const uniqueId = Date.now().toString() + Math.random().toString(36);
-        await callAPI("add", { originalName: name, normalizedName: normalized, leaveType: type, count, dateStr: getCurrentDateString(), uniqueId });
-        document.getElementById('singleName').value = '';
-        document.getElementById('singleCount').value = '1';
-        await loadAllLeaves();
-        alert("✅ تمت الإضافة");
-    }
 
-    function applyFilter() {
-        const fromDateValue = document.getElementById('filterFromDate').value;
-        const toDateValue = document.getElementById('filterToDate').value;
-        
-        activeFilter.fromDate = fromDateValue ? new Date(fromDateValue) : null;
-        activeFilter.toDate = toDateValue ? new Date(toDateValue) : null;
-        
-        if (activeFilter.fromDate) activeFilter.fromDate.setHours(0,0,0,0);
-        if (activeFilter.toDate) activeFilter.toDate.setHours(23,59,59,999);
-        
-        applyFilterToLeaves();
-        if(isAdmin) {
-            renderAdminStats();
-            renderAdminTable();
+        function applyFilter() {
+            const fromDateValue = document.getElementById('filterFromDate').value;
+            const toDateValue = document.getElementById('filterToDate').value;
+            activeFilter.fromDate = fromDateValue ? new Date(fromDateValue) : null;
+            activeFilter.toDate = toDateValue ? new Date(toDateValue) : null;
+            if (activeFilter.fromDate) activeFilter.fromDate.setHours(0,0,0,0);
+            if (activeFilter.toDate) activeFilter.toDate.setHours(23,59,59,999);
+            applyFilterToLeaves();
+            if(isAdmin) { renderAdminStats(); renderAdminTable(); }
         }
-    }
-    
-    function clearFilter() {
-        document.getElementById('filterFromDate').value = '';
-        document.getElementById('filterToDate').value = '';
-        activeFilter = { fromDate: null, toDate: null };
-        filteredLeaves = [];
-        document.getElementById('filterStatus').innerHTML = '';
-        if(isAdmin) {
-            renderAdminStats();
-            renderAdminTable();
+        
+        function clearFilter() {
+            document.getElementById('filterFromDate').value = '';
+            document.getElementById('filterToDate').value = '';
+            activeFilter = { fromDate: null, toDate: null };
+            filteredLeaves = [];
+            document.getElementById('filterStatus').innerHTML = '';
+            if(isAdmin) { renderAdminStats(); renderAdminTable(); }
         }
-    }
 
-    function searchEmployee() {
-        const term = document.getElementById('searchInput').value.trim();
-        const resultsDiv = document.getElementById('searchResults');
-        if(!term) { resultsDiv.style.display = 'none'; return; }
-        const normalizedSearch = getNormalizedName(term);
-        const dataToSearch = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
-        const employeeLeaves = dataToSearch.filter(l => l.normalizedName === normalizedSearch);
-        if(employeeLeaves.length === 0) {
-            resultsDiv.innerHTML = `<div style="text-align:center;color:#c0392b;padding:20px;">❌ لا توجد إجازات للموظف "${escapeHtml(term)}"</div>`;
-            resultsDiv.style.display = 'block'; return;
-        }
-        
-        let totals = { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 };
-        employeeLeaves.forEach(l => {
-            let val = l.count;
-            if(l.type === 'اعتيادية') totals.اعتيادية += val;
-            else if(l.type === 'مرضية') totals.مرضية += val;
-            else if(l.type === 'رسمية') totals.رسمية += val;
-            else if(l.type === 'زمنية') totals.زمنية += val;
-        });
-        
-        let statsHtml = `
-            <div class="employee-stats">
-                <h3 style="color:#1e4a76; margin-bottom:15px; text-align:center;">📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h3>
-                <div class="stats-list">
-                    <div class="stat-item"><span class="stat-label">✅ الاعتيادية الكلية:</span><span class="stat-value">${totals.اعتيادية} يوم</span></div>
-                    <div class="stat-item"><span class="stat-label">🏢 الرسمية الكلية:</span><span class="stat-value">${totals.رسمية} يوم</span></div>
-                    <div class="stat-item"><span class="stat-label">⏱️ الزمنية الكلية:</span><span class="stat-value">${totals.زمنية} ساعة</span></div>
+        function searchEmployee() {
+            const term = document.getElementById('searchInput').value.trim();
+            const resultsDiv = document.getElementById('searchResults');
+            if(!term) { resultsDiv.style.display = 'none'; return; }
+            const normalizedSearch = getNormalizedName(term);
+            const dataToSearch = filteredLeaves.length > 0 ? filteredLeaves : leavesArray;
+            const employeeLeaves = dataToSearch.filter(l => l.normalizedName === normalizedSearch);
+            if(employeeLeaves.length === 0) {
+                resultsDiv.innerHTML = `<div style="text-align:center;color:#c0392b;padding:20px;">❌ لا توجد إجازات للموظف "${escapeHtml(term)}"</div>`;
+                resultsDiv.style.display = 'block'; return;
+            }
+            let totals = { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 };
+            employeeLeaves.forEach(l => {
+                if(l.type === 'اعتيادية') totals.اعتيادية += l.count;
+                else if(l.type === 'مرضية') totals.مرضية += l.count;
+                else if(l.type === 'رسمية') totals.رسمية += l.count;
+                else if(l.type === 'زمنية') totals.زمنية += l.count;
+            });
+            let leavesHtml = '';
+            employeeLeaves.forEach((l, idx) => {
+                let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
+                leavesHtml += `<tr><td>${idx+1}</td><td>${escapeHtml(l.type)}</td><td>${l.count} ${unit}</td><td>${escapeHtml(formatDate(l.dateStr))}</td></tr>`;
+            });
+            resultsDiv.innerHTML = `
+                <div class="employee-stats">
+                    <h3 style="color:#1e4a76; text-align:center;">📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h3>
+                    <div class="stats-list">
+                        <div class="stat-item"><span class="stat-label">✅ الاعتيادية الكلية:</span><span class="stat-value">${totals.اعتيادية} يوم</span></div>
+                        <div class="stat-item"><span class="stat-label">🏢 الرسمية الكلية:</span><span class="stat-value">${totals.رسمية} يوم</span></div>
+                        <div class="stat-item"><span class="stat-label">⏱️ الزمنية الكلية:</span><span class="stat-value">${totals.زمنية} ساعة</span></div>
+                    </div>
                 </div>
-            </div>
-        `;
+                <h5>📋 قائمة الإجازات:</h5>
+                <div class="table-wrapper"><table><thead><tr><th>#</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>${leavesHtml}</tbody></table></div>
+            `;
+            resultsDiv.style.display = 'block';
+        }
         
-        let leavesHtml = '';
-        employeeLeaves.forEach((l, idx) => {
-            let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
-            let formattedDate = formatDate(l.dateStr);
-            leavesHtml += `<tr><td>${idx+1}</td><td>${escapeHtml(l.type)}</td><td>${l.count} ${unit}</td><td>${escapeHtml(formattedDate)}</td></tr>`;
-        });
+        function clearSearch() { document.getElementById('searchInput').value = ''; document.getElementById('searchResults').style.display = 'none'; }
+        function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+
+        // Login functions
+        function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
+        function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
+        function login() {
+            const pass = document.getElementById('passwordInput').value;
+            if(pass === ADMIN_PASSWORD) {
+                isAdmin = true;
+                hideLogin();
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('welcomeMsg').innerHTML = '👋 مرحباً بك في لوحة الإدارة';
+                loadAllLeaves();
+            } else { alert("كلمة المرور غير صحيحة"); }
+            document.getElementById('passwordInput').value = '';
+        }
+        function logout() { 
+            isAdmin = false; 
+            document.getElementById('adminPanel').style.display = 'none'; 
+            document.getElementById('welcomeMsg').innerHTML = '🔍 يمكنك البحث عن موظف لعرض إجازاته وإحصائياته';
+            clearSearch(); 
+        }
+
+        // Event Listeners
+        document.getElementById('adminBtn').addEventListener('click', showLogin);
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('cancelLoginBtn').addEventListener('click', hideLogin);
+        document.getElementById('searchBtn').addEventListener('click', searchEmployee);
+        document.getElementById('clearSearchBtn').addEventListener('click', clearSearch);
+        document.getElementById('searchInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') searchEmployee(); });
+        document.getElementById('addMultipleBtn').addEventListener('click', addMultipleLeaves);
+        document.getElementById('addSingleBtn').addEventListener('click', addSingleLeave);
+        document.getElementById('refreshBtn').addEventListener('click', () => loadAllLeaves());
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        document.getElementById('applyFilterBtn').addEventListener('click', applyFilter);
+        document.getElementById('clearFilterBtn').addEventListener('click', clearFilter);
         
-        resultsDiv.innerHTML = statsHtml + `
-            <h5 style="margin:15px 0 10px 0;">📋 قائمة الإجازات:</h5>
-            <div class="table-wrapper"><table><thead><tr><th>#</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>${leavesHtml}</tbody></table></div>
-        `;
-        resultsDiv.style.display = 'block';
-    }
-    
-    function clearSearch() { document.getElementById('searchInput').value = ''; document.getElementById('searchResults').style.display = 'none'; }
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
-
-    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
-    function login() {
-        if(document.getElementById('passwordInput').value === ADMIN_PASSWORD) {
-            isAdmin = true; hideLogin();
-            document.getElementById('adminPanel').style.display = 'block';
-            document.getElementById('welcomeMsg').innerHTML = '👋 مرحباً بك في لوحة الإدارة';
-            loadAllLeaves();
-        } else { alert("كلمة المرور غير صحيحة"); }
-        document.getElementById('passwordInput').value = '';
-    }
-    function logout() { isAdmin = false; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('welcomeMsg').innerHTML = '🔍 يمكنك البحث'; clearSearch(); }
-
-    document.getElementById('adminBtn').onclick = showLogin;
-    document.getElementById('loginBtn').onclick = login;
-    document.getElementById('cancelLoginBtn').onclick = hideLogin;
-    document.getElementById('searchBtn').onclick = searchEmployee;
-    document.getElementById('clearSearchBtn').onclick = clearSearch;
-    document.getElementById('searchInput').onkeypress = (e) => { if(e.key === 'Enter') searchEmployee(); };
-    document.getElementById('addMultipleBtn').onclick = addMultipleLeaves;
-    document.getElementById('addSingleBtn').onclick = addSingleLeave;
-    document.getElementById('refreshBtn').onclick = () => loadAllLeaves();
-    document.getElementById('logoutBtn').onclick = logout;
-    document.getElementById('applyFilterBtn').onclick = applyFilter;
-    document.getElementById('clearFilterBtn').onclick = clearFilter;
-    loadAllLeaves();
+        loadAllLeaves();
+    })();
 </script>
 </body>
 </html>
