@@ -26,14 +26,14 @@
         .btn-print { background: #16a085; }
         .search-results { background: white; border-radius: 24px; padding: 1rem; margin-top: 1rem; text-align: right; }
         .employee-stats { background: #eef3fc; border-radius: 20px; padding: 1.2rem; margin-bottom: 1rem; }
-        .stats-list { display: flex; flex-direction: column; gap: 12px; margin: 15px 0; }
-        .stat-item { background: white; padding: 12px 20px; border-radius: 50px; font-size: 1.1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .stats-list { display: flex; flex-wrap: wrap; gap: 15px; margin: 15px 0; justify-content: center; }
+        .stat-item { background: white; padding: 12px 25px; border-radius: 50px; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; gap: 15px; }
         .stat-label { font-weight: bold; color: #2c5a7a; }
         .stat-value { font-size: 1.3rem; font-weight: bold; color: #1e4a76; }
         .table-wrapper { overflow-x: auto; border-radius: 20px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-top: 15px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         th { background: #1e4a76; color: white; padding: 10px 8px; }
-        td { padding: 8px 6px; border-bottom: 1px solid #dce5ec; }
+        td { padding: 8px 6px; border-bottom: 1px solid #dce5ec; text-align: center; }
         .admin-panel { display: none; background: #f8fafd; border-radius: 28px; padding: 1.2rem; margin-top: 1.5rem; border: 2px solid #1e4a76; }
         .admin-title { color: #1e4a76; margin: 0 0 15px 0; font-size: 1.1rem; font-weight: bold; }
         .filter-section { background: white; border-radius: 24px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #cbdde9; display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; }
@@ -57,7 +57,7 @@
         .stats-table-wrapper { background: white; border-radius: 24px; margin-bottom: 1.2rem; overflow-x: auto; }
         .stats-title { background: #eef3fc; padding: 0.5rem 1rem; border-radius: 24px 24px 0 0; font-weight: bold; color: #1e4a76; font-size: 0.9rem; }
         .stats-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
-        .stats-table th { background: #f0f5fa; padding: 8px; }
+        .stats-table th { background: #f0f5fa; padding: 8px; text-align: center; }
         .stats-table td { padding: 6px; text-align: center; }
         .delete-btn { background: #c0392b; color: white; border: none; border-radius: 20px; padding: 4px 12px; cursor: pointer; font-size: 0.7rem; }
         .login-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
@@ -82,13 +82,13 @@
 
     <div class="search-section">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 أدخل اسم الموظف ( دريد حامد)">
+            <input type="text" id="searchInput" placeholder="🔍 أدخل اسم الموظف (مثال: دريد حامد)">
             <button id="searchBtn" class="btn-secondary btn">بحث</button>
             <button id="clearSearchBtn" class="btn-secondary btn" style="background:#95a5a6;">مسح</button>
             <button id="adminBtn" class="btn-admin btn">🔐 إدارة</button>
         </div>
         <div class="search-box" style="margin-top: 10px;">
-            <input type="text" id="dateSearchInput" placeholder="📅 بحث بالتاريخ (مثال:  9/4/2026)">
+            <input type="text" id="dateSearchInput" placeholder="📅 بحث بالتاريخ (مثال: الخميس 9/4/2026)">
             <button id="dateSearchBtn" class="btn-filter btn">🔍 بحث بالتاريخ</button>
             <button id="printReportBtn" class="btn-print btn" style="display:none;">🖨️ طباعة التقرير</button>
         </div>
@@ -121,9 +121,6 @@
                 <div class="name-field"><span>2.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثاني"></div>
                 <div class="name-field"><span>3.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثالث"></div>
                 <div class="name-field"><span>4.</span><input type="text" class="multi-name" placeholder="اسم الموظف الرابع"></div>
-                <div class="name-field"><span>5.</span><input type="text" class="multi-name" placeholder="اسم الموظف الخامس"></div>
-                <div class="name-field"><span>5.</span><input type="text" class="multi-name" placeholder="اسم الموظف الخامس"></div>
-                <div class="name-field"><span>5.</span><input type="text" class="multi-name" placeholder="اسم الموظف الخامس"></div>
                 <div class="name-field"><span>5.</span><input type="text" class="multi-name" placeholder="اسم الموظف الخامس"></div>
             </div>
             <div class="single-controls">
@@ -180,13 +177,12 @@
         </div>
         <div class="stats-full">
             <div class="stats-table-wrapper"><div class="stats-title">📈 إحصائيات الإجازات لكل موظف</div>
-            <table class="stats-table"><thead><tr><th>الموظف</th><th>✅ اعتيادية</th><th>🩺 مرضية</th><th>🏢 رسمية</th><th>⏱️ زمنية</th><th>📊 الإجمالي</th></tr></thead>
-            <tbody id="statsTableBody">...</tbody></table></div>
+            <table class="stats-table"><thead>验<th>الموظف</th><th>✅ اعتيادية</th><th>🩺 مرضية</th><th>🏢 رسمية</th><th>⏱️ زمنية</th><th>📊 الإجمالي</th>验</thead>
+            <tbody id="statsTableBody">...</tbody>}</div>
         </div>
-        <div class="table-wrapper"><table><thead><tr><th>#</th><th>الاسم</th><th>الاسم الموحد</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="adminTableBody"></tbody></table></div>
+        <div class="table-wrapper">\t表格<thead>验<th>#</th><th>الاسم</th><th>الاسم الموحد</th><th>النوع</th><th>العدد</th><th>التاريخ</th><th>حذف</th>验</thead><tbody id="adminTableBody"></tbody>}</div>
     </div>
-    <div class="footer-note">✅ تصميم الملف بواسطة ذاتية القسم✅ </div>
-    <div class="footer-note">✅ اعتماد البيانات المذكورة على بيانات كروب موقف القسم ✅ </div>
+    <div class="footer-note">✅ تم انشاء هذا الملف بواسطة ذاتية القسم بألاعتماد على تبليغات كروب القسم ✅</div>
 </div>
 
 <div id="loginOverlay" class="login-overlay">
@@ -346,11 +342,17 @@
             else if(leave.type === 'زمنية') record.زمنية += leave.count;
         }
         const tbody = document.getElementById('statsTableBody');
-        if(statsMap.size === 0) { tbody.innerHTML = '<tr><td colspan="6">لا توجد بيانات</td></tr>'; return; }
+        if(statsMap.size === 0) { tbody.innerHTML = '发展<td colspan="6">لا توجد بيانات<th>'; return; }
         let rows = '';
         for(let [name, data] of statsMap.entries()) {
             let totalDays = data.اعتيادية + data.مرضية + data.رسمية;
-            rows += `<tr><td style="font-weight:bold;">${escapeHtml(name)}</td><td>${data.اعتيادية}</td><td>${data.مرضية}</td><td>${data.رسمية}</td><td>${data.زمنية}</td><td>${totalDays} يوم / ${data.زمنية} ساعة</td></tr>`;
+            rows += `<tr><td style="font-weight:bold;">${escapeHtml(name)}</td>
+                            <td>${data.اعتيادية}</td>
+                            <td>${data.مرضية}</td>
+                            <td>${data.رسمية}</td>
+                            <td>${data.زمنية}</td>
+                            <td>${totalDays} يوم / ${data.زمنية} ساعة</td>
+                        </tr>`;
         }
         tbody.innerHTML = rows;
     }
@@ -365,14 +367,14 @@
             let shiftText = item.shift ? ` (${item.shift})` : '';
             let durationText = `${item.count} ${unit}${shiftText}`;
             html += `<tr>
-                        <td>${idx+1}</td>
-                        <td>${escapeHtml(item.originalName)}</td>
-                        <td>${escapeHtml(item.normalizedName)}</td>
-                        <td>${escapeHtml(item.type)}</td>
-                        <td>${durationText}</td>
-                        <td>${escapeHtml(formatDate(item.dateStr))}</td>
-                        <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td>
-                    </tr>`;
+                         <td>${idx+1}</td>
+                         <td>${escapeHtml(item.originalName)}</td>
+                         <td>${escapeHtml(item.normalizedName)}</td>
+                         <td>${escapeHtml(item.type)}</td>
+                         <td>${durationText}</td>
+                         <td>${escapeHtml(formatDate(item.dateStr))}</td>
+                         <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td>
+                      </tr>`;
         });
         tbody.innerHTML = html;
         document.querySelectorAll('.delete-btn').forEach(btn => {
@@ -491,23 +493,59 @@
             return;
         }
         
+        // حساب الإحصائيات الكلية لجميع الموظفين في هذا اليوم
+        let totals = { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 };
+        dayLeaves.forEach(leave => {
+            if(leave.type === 'اعتيادية') totals.اعتيادية += leave.count;
+            else if(leave.type === 'مرضية') totals.مرضية += leave.count;
+            else if(leave.type === 'رسمية') totals.رسمية += leave.count;
+            else if(leave.type === 'زمنية') totals.زمنية += leave.count;
+        });
+        
         const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
         const formattedDate = `${weekdays[targetDate.getDay()]} ${targetDate.getDate()}/${targetDate.getMonth()+1}/${targetDate.getFullYear()}`;
         
-        let tableHtml = `
-            <div style="direction:rtl; text-align:right;">
-                <div style="background:#eef3fc; border-radius:20px; padding:1rem; margin-bottom:1rem; text-align:center;">
-                    <h2 style="color:#1e4a76; margin:0;">دائرة البحوث الزراعية</h2>
-                    <h3 style="color:#2c5a7a; margin:5px 0;">قسم علوم الأغذية والتقانات الاحيائية</h3>
-                    <div style="font-size:1.2rem; font-weight:bold; margin-top:10px;">📅 ملخص الموقف اليومي للإجازات</div>
-                    <div style="background:white; display:inline-block; padding:8px 20px; border-radius:30px; margin-top:10px;">
-                        🗓️ ${formattedDate}
+        // عرض الإحصائيات الكلية بشكل منفصل ومرتب
+        let statsHtml = `
+            <div style="background:#eef3fc; border-radius:20px; padding:1rem; margin-bottom:1rem; text-align:center;">
+                <h2 style="color:#1e4a76; margin:0;">دائرة البحوث الزراعية</h2>
+                <h3 style="color:#2c5a7a; margin:5px 0;">قسم علوم الأغذية والتقانات الاحيائية</h3>
+                <div style="font-size:1.2rem; font-weight:bold; margin-top:10px;">📅 ملخص الموقف اليومي للإجازات</div>
+                <div style="background:white; display:inline-block; padding:8px 20px; border-radius:30px; margin-top:10px;">
+                    🗓️ ${formattedDate}
+                </div>
+            </div>
+            <div style="background:white; border-radius:20px; padding:1rem; margin-bottom:1rem;">
+                <h4 style="color:#1e4a76; margin:0 0 10px 0; text-align:center;">📊 الإحصائيات الكلية لهذا اليوم</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+                    <div style="background:#e8f0fe; padding:10px 20px; border-radius:40px;">
+                        <span style="font-weight:bold;">✅ الاعتيادية الكلية:</span>
+                        <span style="font-size:1.2rem; font-weight:bold; color:#1e4a76; margin-right:8px;">${totals.اعتيادية} يوم</span>
+                    </div>
+                    <div style="background:#e8f0fe; padding:10px 20px; border-radius:40px;">
+                        <span style="font-weight:bold;">🩺 المرضية الكلية:</span>
+                        <span style="font-size:1.2rem; font-weight:bold; color:#1e4a76; margin-right:8px;">${totals.مرضية} يوم</span>
+                    </div>
+                    <div style="background:#e8f0fe; padding:10px 20px; border-radius:40px;">
+                        <span style="font-weight:bold;">🏢 الرسمية الكلية:</span>
+                        <span style="font-size:1.2rem; font-weight:bold; color:#1e4a76; margin-right:8px;">${totals.رسمية} يوم</span>
+                    </div>
+                    <div style="background:#e8f0fe; padding:10px 20px; border-radius:40px;">
+                        <span style="font-weight:bold;">⏱️ الزمنية الكلية:</span>
+                        <span style="font-size:1.2rem; font-weight:bold; color:#1e4a76; margin-right:8px;">${totals.زمنية} ساعة</span>
                     </div>
                 </div>
-                <div class="table-wrapper">
-                    <table style="width:100%">
-                        <thead><tr><th>#</th><th>اسم الموظف</th><th>نوع الإجازة</th><th>المدة</th><th>الفترة</th></tr></thead>
-                        <tbody>
+            </div>
+        `;
+        
+        let tableHtml = `
+            <h4 style="margin:15px 0 10px 0;">📋 قائمة الإجازات:</h4>
+            <div class="table-wrapper">
+                <table style="width:100%">
+                    <thead>
+                        <tr><th>#</th><th>اسم الموظف</th><th>نوع الإجازة</th><th>العدد</th><th>الفترة</th></tr>
+                    </thead>
+                    <tbody>
         `;
         
         dayLeaves.forEach((leave, idx) => {
@@ -522,9 +560,9 @@
                           </tr>`;
         });
         
-        tableHtml += `</tbody>}</div><div style="margin-top:20px; text-align:center; color:#7f8c8d; font-size:0.8rem;">تم إنشاء هذا التقرير بواسطة نظام إجازات القسم</div></div>`;
+        tableHtml += `</tbody></table></div>`;
         
-        resultsDiv.innerHTML = tableHtml;
+        resultsDiv.innerHTML = statsHtml + tableHtml;
         resultsDiv.style.display = 'block';
         document.getElementById('printReportBtn').style.display = 'inline-block';
     }
@@ -534,6 +572,15 @@
             alert("لا يوجد تقرير للطباعة. قم بالبحث عن تاريخ أولاً.");
             return;
         }
+        
+        // حساب الإحصائيات الكلية للطباعة
+        let totals = { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 };
+        currentReportLeaves.forEach(leave => {
+            if(leave.type === 'اعتيادية') totals.اعتيادية += leave.count;
+            else if(leave.type === 'مرضية') totals.مرضية += leave.count;
+            else if(leave.type === 'رسمية') totals.رسمية += leave.count;
+            else if(leave.type === 'زمنية') totals.زمنية += leave.count;
+        });
         
         const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
         const formattedDate = `${weekdays[currentReportDate.getDay()]} ${currentReportDate.getDate()}/${currentReportDate.getMonth()+1}/${currentReportDate.getFullYear()}`;
@@ -545,15 +592,36 @@
                 <div style="text-align:center; font-size:1.1rem; font-weight:bold; margin:15px 0; padding:10px; background:#eef3fc; border-radius:30px;">
                     📅 ملخص الموقف اليومي للإجازات<br>🗓️ ${formattedDate}
                 </div>
+                <div style="margin:20px 0;">
+                    <h4 style="text-align:center;">📊 الإحصائيات الكلية</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+                        <div style="background:#e8f0fe; padding:8px 16px; border-radius:30px;">✅ الاعتيادية الكلية: <strong>${totals.اعتيادية}</strong> يوم</div>
+                        <div style="background:#e8f0fe; padding:8px 16px; border-radius:30px;">🩺 المرضية الكلية: <strong>${totals.مرضية}</strong> يوم</div>
+                        <div style="background:#e8f0fe; padding:8px 16px; border-radius:30px;">🏢 الرسمية الكلية: <strong>${totals.رسمية}</strong> يوم</div>
+                        <div style="background:#e8f0fe; padding:8px 16px; border-radius:30px;">⏱️ الزمنية الكلية: <strong>${totals.زمنية}</strong> ساعة</div>
+                    </div>
+                </div>
                 <table style="width:100%; border-collapse: collapse; margin-top:20px;">
-                    <thead><tr style="background:#1e4a76; color:white;"><th style="padding:12px; border:1px solid #cbdde9;">#</th><th style="padding:12px; border:1px solid #cbdde9;">اسم الموظف</th><th style="padding:12px; border:1px solid #cbdde9;">نوع الإجازة</th><th style="padding:12px; border:1px solid #cbdde9;">المدة</th><th style="padding:12px; border:1px solid #cbdde9;">الفترة</th></tr></thead>
+                    <thead><tr style="background:#1e4a76; color:white;">
+                        <th style="padding:12px; border:1px solid #cbdde9;">#</th>
+                        <th style="padding:12px; border:1px solid #cbdde9;">اسم الموظف</th>
+                        <th style="padding:12px; border:1px solid #cbdde9;">نوع الإجازة</th>
+                        <th style="padding:12px; border:1px solid #cbdde9;">العدد</th>
+                        <th style="padding:12px; border:1px solid #cbdde9;">الفترة</th>
+                    </tr></thead>
                     <tbody>
         `;
         
         currentReportLeaves.forEach((leave, idx) => {
             let unit = (leave.type === 'زمنية') ? 'ساعة' : 'يوم';
             let shiftText = leave.shift || '---';
-            printHtml += `<tr><td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${idx+1}</td><td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${escapeHtml(leave.originalName)}</td><td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${escapeHtml(leave.type)}</td><td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${leave.count} ${unit}</td><td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${shiftText}</td></tr>`;
+            printHtml += `<tr>
+                        <td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${idx+1}</td>
+                        <td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${escapeHtml(leave.originalName)}</td>
+                        <td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${escapeHtml(leave.type)}</td>
+                        <td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${leave.count} ${unit}</td>
+                        <td style="padding:10px; border:1px solid #cbdde9; text-align:center;">${shiftText}</td>
+                    </tr>`;
         });
         
         printHtml += `</tbody></table><div style="margin-top:30px; text-align:center; font-size:0.8rem; color:#7f8c8d;">تم إنشاء هذا التقرير بواسطة نظام إجازات القسم</div></div>`;
@@ -593,14 +661,28 @@
         employeeLeaves.forEach((l, idx) => {
             let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
             let shiftText = l.shift ? ` (${l.shift})` : '';
-            leavesHtml += `<tr><td>${idx+1}</td><td>${escapeHtml(l.type)}</td><td>${l.count} ${unit}${shiftText}</td><td>${escapeHtml(formatDate(l.dateStr))}</td></tr>`;
+            leavesHtml += `<tr>
+                            <td>${idx+1}</td>
+                            <td>${escapeHtml(l.type)}</td>
+                            <td>${l.count} ${unit}${shiftText}</td>
+                            <td>${escapeHtml(formatDate(l.dateStr))}</td>
+                          </tr>`;
         });
         resultsDiv.innerHTML = `
             <div class="employee-stats"><h3 style="color:#1e4a76; text-align:center;">📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h3>
-            <div class="stats-list"><div class="stat-item"><span class="stat-label">✅ الاعتيادية الكلية:</span><span class="stat-value">${totals.اعتيادية} يوم</span></div>
-            <div class="stat-item"><span class="stat-label">🏢 الرسمية الكلية:</span><span class="stat-value">${totals.رسمية} يوم</span></div>
-            <div class="stat-item"><span class="stat-label">⏱️ الزمنية الكلية:</span><span class="stat-value">${totals.زمنية} ساعة</span></div></div></div>
-            <h5>📋 قائمة الإجازات:</h5><div class="table-wrapper">\t表格<thead><tr><th>#</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>${leavesHtml}</tbody>}</div>
+            <div class="stats-list">
+                <div class="stat-item"><span class="stat-label">✅ الاعتيادية الكلية:</span><span class="stat-value">${totals.اعتيادية} يوم</span></div>
+                <div class="stat-item"><span class="stat-label">🩺 المرضية الكلية:</span><span class="stat-value">${totals.مرضية} يوم</span></div>
+                <div class="stat-item"><span class="stat-label">🏢 الرسمية الكلية:</span><span class="stat-value">${totals.رسمية} يوم</span></div>
+                <div class="stat-item"><span class="stat-label">⏱️ الزمنية الكلية:</span><span class="stat-value">${totals.زمنية} ساعة</span></div>
+            </div></div>
+            <h5>📋 قائمة الإجازات:</h5>
+            <div class="table-wrapper">
+                <table style="width:100%">
+                    <thead><tr><th>#</th><th>النوع</th><th>العدد</th><th>التاريخ</th></tr></thead>
+                    <tbody>${leavesHtml}</tbody>
+                </table>
+            </div>
         `;
         resultsDiv.style.display = 'block';
     }
