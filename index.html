@@ -329,7 +329,7 @@
     function escapeHtml(str){ if(!str) return ''; return str.replace(/[&<>]/g,m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
     function showLogin(){ document.getElementById('loginOverlay').style.display='flex'; }
     function hideLogin(){ document.getElementById('loginOverlay').style.display='none'; }
-    function login(){ const pass=document.getElementById('passwordInput').value; if(pass===ADMIN_PASSWORD){ isAdmin=true; hideLogin(); document.getElementById('adminPanel').style.display='block'; document.getElementById('welcomeMsg').innerHTML='👋 مرحباً بك في لوحة الإدارة'; loadAllLeaves(); } else { alert("كلمة المرور غير صحيحة"); } document.getElementById('passwordInput').value=''; }
+    function login(){ const pass=document.getElementById('passwordInput').value; if(pass===ADMIN_PASSWORD){ isAdmin=true; hideLogin(); document.getElementById('adminPanel').style.display='block'; document.getElementById('welcomeMsg').innerHTML='👋  مرحباً بك في لوحة الإدارة قسم علوم الاغذية والتقانات الاحيائية'; loadAllLeaves(); } else { alert("كلمة المرور غير صحيحة"); } document.getElementById('passwordInput').value=''; }
     function logout(){ isAdmin=false; document.getElementById('adminPanel').style.display='none'; document.getElementById('welcomeMsg').innerHTML='🔍 يمكنك البحث عن موظف لعرض إجازاته وإحصائياته'; clearSearch(); document.getElementById('dateSearchResultArea').style.display='none'; }
     
     document.getElementById('adminBtn').addEventListener('click',showLogin);
