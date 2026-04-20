@@ -35,49 +35,41 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
             max-height: 70vh; 
             overflow-y: auto; 
-            overflow-x: hidden;
             display: block;
         }
         
-        .table-wrapper { width: 100%; overflow-x: hidden; }
+        .table-wrapper { 
+            width: 100%; 
+            overflow-x: auto;
+        }
         
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.7rem;
-            table-layout: fixed;
+            font-size: 0.85rem;
         }
         
         .data-table th {
             background: #1e4a76;
             color: white;
-            padding: 8px 4px;
+            padding: 10px 8px;
             font-weight: bold;
             text-align: center;
-            font-size: 0.7rem;
         }
         
         .data-table td {
-            padding: 6px 4px;
+            padding: 8px 8px;
             border-bottom: 1px solid #e0e8f0;
             text-align: center;
-            word-break: break-word;
-            font-size: 0.7rem;
         }
         
         .data-table tr:hover { background: #f0f5fa; }
         
-        .data-table th:nth-child(1) { width: 8%; }
-        .data-table th:nth-child(2) { width: 35%; }
-        .data-table th:nth-child(3) { width: 15%; }
-        .data-table th:nth-child(4) { width: 15%; }
-        .data-table th:nth-child(5) { width: 27%; }
-        
-        .employee-stats { background: #eef3fc; border-radius: 20px; padding: 0.8rem; margin-bottom: 1rem; }
-        .stats-list { display: flex; flex-direction: row; flex-wrap: wrap; gap: 8px; margin: 10px 0; justify-content: space-around; }
-        .stat-item { background: white; padding: 6px 12px; border-radius: 40px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; min-width: 70px; text-align: center; }
-        .stat-label { font-weight: bold; color: #2c5a7a; font-size: 0.65rem; }
-        .stat-value { font-size: 0.9rem; font-weight: bold; color: #1e4a76; }
+        .employee-stats { background: #eef3fc; border-radius: 20px; padding: 1rem; margin-bottom: 1rem; }
+        .stats-list { display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; margin: 10px 0; justify-content: space-around; }
+        .stat-item { background: white; padding: 8px 15px; border-radius: 40px; font-size: 0.85rem; box-shadow: 0 2px 5px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; min-width: 80px; text-align: center; }
+        .stat-label { font-weight: bold; color: #2c5a7a; font-size: 0.7rem; }
+        .stat-value { font-size: 1rem; font-weight: bold; color: #1e4a76; }
         
         .admin-panel { display: none; background: #f8fafd; border-radius: 28px; padding: 1.2rem; margin-top: 1.5rem; border: 2px solid #1e4a76; }
         .admin-title { color: #1e4a76; margin: 0 0 15px 0; font-size: 1.1rem; font-weight: bold; }
@@ -107,7 +99,7 @@
             .container { padding: 1rem; } 
             .names-grid { grid-template-columns: 1fr; }
             .stats-list { flex-direction: column; }
-            .data-table th, .data-table td { padding: 5px 2px; font-size: 0.65rem; }
+            .data-table th, .data-table td { padding: 6px 3px; font-size: 0.7rem; }
         }
         .report-footer { margin-top: 30px; text-align: center; font-size: 12px; color: #4b6f8c; border-top: 1px dashed #ccc; padding-top: 10px; font-weight: bold; }
     </style>
@@ -146,7 +138,7 @@
         <div class="date-search-area">
             <div style="font-weight:bold; margin-bottom:8px;">📆 بحث عن إجازات في تاريخ محدد (صيغة يوم/شهر/سنة)</div>
             <div class="date-search-row">
-                <div class="control-group" style="flex:2"><label>📅 أدخل التاريخ</label><input type="text" id="specificDateInput" placeholder="مثال: 3/2/2026"></div>
+                <div class="control-group" style="flex:2"><label>📅 أدخل التاريخ</label><input type="text" id="specificDateInput" placeholder="مثال: 19/4/2026"></div>
                 <div><button id="searchByDateBtn" class="btn-filter btn">🔎 بحث</button></div>
                 <div><button id="printDateReportBtn" class="btn-print btn">🖨️ طباعة</button></div>
                 <div><button id="pdfDateReportBtn" class="btn-print btn" style="background:#2c3e50;">📄 PDF</button></div>
@@ -162,10 +154,10 @@
         <div class="multi-names-section"><div class="multi-names-title">➕ إضافة فردية</div><div style="display: flex; flex-wrap: wrap; gap: 10px;"><input type="text" id="singleName" placeholder="الاسم" style="flex:2; padding:8px; border-radius:25px;"><select id="singleType" style="flex:1; padding:8px; border-radius:25px;"><option value="اعتيادية">اعتيادية</option><option value="مرضية">مرضية</option><option value="رسمية">رسمية</option><option value="زمنية">زمنية</option></select><input type="number" id="singleCount" value="1" style="width:80px; padding:8px; border-radius:25px;"><button id="addSingleBtn" class="btn">➕ إضافة</button></div></div>
         <div class="actions-bar"><button id="refreshBtn" class="btn-secondary btn">🔄 تحديث</button><button id="logoutBtn" class="btn-secondary btn" style="background:#7f8c8d;">🚪 خروج</button></div>
         <div class="stats-full"><div class="stats-table-wrapper"><div class="stats-title">📈 إحصائيات الإجازات</div><table class="stats-table"><thead><tr><th>الموظف</th><th>اعتيادية</th><th>مرضية</th><th>رسمية</th><th>زمنية</th><th>الإجمالي</th></tr></thead><tbody id="statsTableBody">...</tbody></table></div></div>
-        <div class="table-wrapper"><table><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="adminTableBody"></tbody></table></div>
+        <div class="table-wrapper"><tr><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="adminTableBody"></tbody></table></div>
     </div>
-    <div class="footer-note">✅ برمجة وتصميم  ذاتية القسم </div>
-تم اعتماد بيانات من كروب الموقف اليومي
+    <div class="footer-note"> ✅ تصميم ذاتية القسم ✅ </div>
+    <div class="footer-note"> ✅ اعتماد بيانات من كروب الموقف ✅ </div>
 </div>
 
 <div id="loginOverlay" class="login-overlay"><div class="login-box"><h3>🔐 الدخول إلى لوحة الإدارة</h3><input type="password" id="passwordInput" placeholder="كلمة المرور"><button id="loginBtn" class="btn">تأكيد</button><button id="cancelLoginBtn" class="btn-secondary btn">إلغاء</button></div></div>
@@ -180,117 +172,52 @@
     let activeFilter = { fromDate: null, toDate: null };
 
     // ========== دوال التاريخ مع تصحيح +1 ==========
-    
-    // استخراج اليوم والشهر والسنة من النص
     function extractDateFromString(dateStr) {
         if (!dateStr) return null;
         let str = dateStr.toString().trim();
-        
-        // صيغة ISO: 2026-02-02T21:00:00.000Z
         let isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
         if (isoMatch) {
-            return {
-                year: parseInt(isoMatch[1], 10),
-                month: parseInt(isoMatch[2], 10),
-                day: parseInt(isoMatch[3], 10)
-            };
+            return { year: parseInt(isoMatch[1]), month: parseInt(isoMatch[2]), day: parseInt(isoMatch[3]) };
         }
-        
-        // صيغة عربية: 2/2/2026 أو 02/02/2026
         let arabicMatch = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
         if (arabicMatch) {
-            return {
-                day: parseInt(arabicMatch[1], 10),
-                month: parseInt(arabicMatch[2], 10),
-                year: parseInt(arabicMatch[3], 10)
-            };
+            return { day: parseInt(arabicMatch[1]), month: parseInt(arabicMatch[2]), year: parseInt(arabicMatch[3]) };
         }
-        
         return null;
     }
     
-    // حساب عدد أيام الشهر (للتأكد من صحة إضافة يوم)
-    function getDaysInMonth(year, month) {
-        return new Date(year, month, 0).getDate();
-    }
-    
-    // تصحيح التاريخ بإضافة يوم واحد
-    function fixDate(day, month, year) {
-        let newDay = day + 1;
-        let newMonth = month;
-        let newYear = year;
-        
-        let daysInMonth = getDaysInMonth(year, month);
-        if (newDay > daysInMonth) {
-            newDay = 1;
-            newMonth = month + 1;
-            if (newMonth > 12) {
-                newMonth = 1;
-                newYear = year + 1;
-            }
-        }
-        return { day: newDay, month: newMonth, year: newYear };
-    }
-    
-    // عرض التاريخ بشكل قصير مع تصحيح +1
-    function formatDateShort(dateString) {
+    function formatDateCorrected(dateString) {
         if (!dateString) return "غير محدد";
         let parts = extractDateFromString(dateString);
         if (!parts) return dateString;
-        
-        // تصحيح التاريخ بإضافة يوم
-        let fixed = fixDate(parts.day, parts.month, parts.year);
-        return `${fixed.day}/${fixed.month}/${fixed.year}`;
+        let day = parts.day + 1;
+        let month = parts.month;
+        let year = parts.year;
+        let daysInMonth = new Date(year, month, 0).getDate();
+        if (day > daysInMonth) { day = 1; month++; if (month > 12) { month = 1; year++; } }
+        return `${day}/${month}/${year}`;
     }
     
-    // عرض التاريخ مع اسم اليوم مع تصحيح +1
-    function formatDateForDisplay(dateString) {
-        if (!dateString) return "غير محدد";
-        let parts = extractDateFromString(dateString);
-        if (!parts) return dateString;
-        
-        // تصحيح التاريخ بإضافة يوم
-        let fixed = fixDate(parts.day, parts.month, parts.year);
-        let tempDate = new Date(fixed.year, fixed.month - 1, fixed.day);
-        const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-        let weekday = weekdays[tempDate.getDay()];
-        return `${weekday}، ${fixed.day}/${fixed.month}/${fixed.year}`;
-    }
-    
-    // مقارنة تاريخين (للبحث) - نقارن بعد التصحيح
     function isSameDate(leaveDateStr, targetDate) {
         if (!leaveDateStr || !targetDate) return false;
-        let leaveParts = extractDateFromString(leaveDateStr);
-        if (!leaveParts) return false;
-        
-        // نصحح تاريخ الإجازة
-        let fixedLeave = fixDate(leaveParts.day, leaveParts.month, leaveParts.year);
-        
-        return fixedLeave.day === targetDate.day && 
-               fixedLeave.month === targetDate.month && 
-               fixedLeave.year === targetDate.year;
+        let corrected = formatDateCorrected(leaveDateStr);
+        let parts = corrected.split('/');
+        return parseInt(parts[0]) === targetDate.day && parseInt(parts[1]) === targetDate.month && parseInt(parts[2]) === targetDate.year;
     }
     
-    // تحويل تاريخ المدخل من المستخدم (مثل 3/2/2026) إلى كائن
     function parseUserDate(dateStr) {
         if (!dateStr) return null;
         let parts = dateStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
         if (parts) {
-            let day = parseInt(parts[1], 10);
-            let month = parseInt(parts[2], 10);
-            let year = parseInt(parts[3], 10);
-            if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1900 && year <= 2100) {
-                return { day, month, year };
-            }
+            let day = parseInt(parts[1]), month = parseInt(parts[2]), year = parseInt(parts[3]);
+            if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1900) return { day, month, year };
         }
         return null;
     }
     
-    // للتصفية بين تاريخين - نستخدم التاريخ الأصلي للمقارنة
     function parseDateForCompare(dateStr) {
         let parts = extractDateFromString(dateStr);
         if (!parts) return null;
-        // للتصفية نستخدم التاريخ الأصلي (لأن الفارق يوم واحد فقط ولا يؤثر على النطاق)
         return new Date(parts.year, parts.month - 1, parts.day);
     }
 
@@ -302,13 +229,8 @@
         const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']; 
         document.getElementById('currentDate').innerText = `${weekdays[today.getDay()]}، ${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`; 
     }
-    updateDate(); 
-    setInterval(updateDate, 60000);
-    
-    function getCurrentDateString() { 
-        const today = new Date(); 
-        return `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`; 
-    }
+    updateDate(); setInterval(updateDate, 60000);
+    function getCurrentDateString() { const today = new Date(); return `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`; }
 
     async function callAPI(action, data = {}) { 
         const params = new URLSearchParams({ action, ...data }); 
@@ -318,164 +240,47 @@
     }
     
     function applyFilterToLeaves() {
-        if (!activeFilter.fromDate && !activeFilter.toDate) { 
-            filteredLeaves = [...leavesArray]; 
-            document.getElementById('filterStatus').innerHTML = ''; 
-            return; 
-        } 
-        filteredLeaves = leavesArray.filter(leave => { 
-            const ld = parseDateForCompare(leave.dateStr); 
-            if (!ld) return true; 
-            if (activeFilter.fromDate && activeFilter.toDate) return ld >= activeFilter.fromDate && ld <= activeFilter.toDate; 
-            if (activeFilter.fromDate) return ld >= activeFilter.fromDate; 
-            if (activeFilter.toDate) return ld <= activeFilter.toDate; 
-            return true; 
-        }); 
-        let txt = ''; 
-        if (activeFilter.fromDate) txt += `من ${activeFilter.fromDate.getDate()}/${activeFilter.fromDate.getMonth()+1}/${activeFilter.fromDate.getFullYear()} `; 
-        if (activeFilter.toDate) txt += `إلى ${activeFilter.toDate.getDate()}/${activeFilter.toDate.getMonth()+1}/${activeFilter.toDate.getFullYear()}`; 
+        if (!activeFilter.fromDate && !activeFilter.toDate) { filteredLeaves = [...leavesArray]; document.getElementById('filterStatus').innerHTML = ''; return; } 
+        filteredLeaves = leavesArray.filter(leave => { const ld = parseDateForCompare(leave.dateStr); if (!ld) return true; if (activeFilter.fromDate && activeFilter.toDate) return ld >= activeFilter.fromDate && ld <= activeFilter.toDate; if (activeFilter.fromDate) return ld >= activeFilter.fromDate; if (activeFilter.toDate) return ld <= activeFilter.toDate; return true; }); 
+        let txt = ''; if (activeFilter.fromDate) txt += `من ${activeFilter.fromDate.getDate()}/${activeFilter.fromDate.getMonth()+1}/${activeFilter.fromDate.getFullYear()} `; if (activeFilter.toDate) txt += `إلى ${activeFilter.toDate.getDate()}/${activeFilter.toDate.getMonth()+1}/${activeFilter.toDate.getFullYear()}`; 
         document.getElementById('filterStatus').innerHTML = `📌 مصفى: ${txt} (${filteredLeaves.length} إجازة)`;
     }
 
     async function loadAllLeaves() { 
-        try { 
-            const result = await callAPI("getAll"); 
-            if (result.success) { 
-                leavesArray = (result.leaves || []).map(l => ({ ...l, count: extractNumber(l.count), dateStr: l.dateStr })); 
-                applyFilterToLeaves(); 
-                if (isAdmin) { renderAdminStats(); renderAdminTable(); } 
-            } 
-        } catch (error) { 
-            document.getElementById('connectionStatus').innerHTML = '🔴 خطأ في الاتصال'; 
-        } 
-    }
+        try { const result = await callAPI("getAll"); if (result.success) { leavesArray = (result.leaves || []).map(l => ({ ...l, count: extractNumber(l.count), dateStr: l.dateStr })); applyFilterToLeaves(); if (isAdmin) { renderAdminStats(); renderAdminTable(); } } } catch (error) { document.getElementById('connectionStatus').innerHTML = '🔴 خطأ في الاتصال'; } }
     
     function renderAdminStats() { 
         const dataToUse = filteredLeaves.length ? filteredLeaves : leavesArray; 
         const statsMap = new Map(); 
-        for (let l of dataToUse) { 
-            const nn = l.normalizedName; 
-            if (!statsMap.has(nn)) statsMap.set(nn, { اعتيادية: 0, مرضية: 0, رسمية: 0, زمنية: 0 }); 
-            const rec = statsMap.get(nn); 
-            if (l.type === 'اعتيادية') rec.اعتيادية += l.count; 
-            else if (l.type === 'مرضية') rec.مرضية += l.count; 
-            else if (l.type === 'رسمية') rec.رسمية += l.count; 
-            else if (l.type === 'زمنية') rec.زمنية += l.count; 
-        } 
-        const tbody = document.getElementById('statsTableBody'); 
-        if (statsMap.size === 0) { tbody.innerHTML = '<tr><td colspan="6">لا توجد بيانات</td></tr>'; return; } 
-        let rows = ''; 
-        for (let [name, data] of statsMap.entries()) { 
-            let totalDays = data.اعتيادية + data.مرضية + data.رسمية; 
-            rows += `<tr><td style="font-weight:bold;">${escapeHtml(name)}</td><td>${data.اعتيادية}</td><td>${data.مرضية}</td><td>${data.رسمية}</td><td>${data.زمنية}</td><td>${totalDays} يوم / ${data.زمنية} ساعة</td></tr>`; 
-        } 
-        tbody.innerHTML = rows; 
+        for (let l of dataToUse) { const nn = l.normalizedName; if (!statsMap.has(nn)) statsMap.set(nn, { اعتيادية: 0, مرضية: 0, رسمية: 0, زمنية: 0 }); const rec = statsMap.get(nn); if (l.type === 'اعتيادية') rec.اعتيادية += l.count; else if (l.type === 'مرضية') rec.مرضية += l.count; else if (l.type === 'رسمية') rec.رسمية += l.count; else if (l.type === 'زمنية') rec.زمنية += l.count; } 
+        const tbody = document.getElementById('statsTableBody'); if (statsMap.size === 0) { tbody.innerHTML = '<tr><td colspan="6">لا توجد بيانات</td></tr>'; return; } 
+        let rows = ''; for (let [name, data] of statsMap.entries()) { let totalDays = data.اعتيادية + data.مرضية + data.رسمية; rows += `<tr><td style="font-weight:bold;">${escapeHtml(name)}</td><td>${data.اعتيادية}</td><td>${data.مرضية}</td><td>${data.رسمية}</td><td>${data.زمنية}</td><td>${totalDays} يوم / ${data.زمنية} ساعة</td></tr>`; } tbody.innerHTML = rows; 
     }
     
     function renderAdminTable() { 
         const dataToUse = filteredLeaves.length ? filteredLeaves : leavesArray; 
-        const tbody = document.getElementById('adminTableBody'); 
-        if (!dataToUse.length) { tbody.innerHTML = '<tr><td colspan="6">لا توجد إجازات</td></tr>'; return; } 
-        let html = ''; 
-        dataToUse.forEach((item, idx) => { 
-            let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم'; 
-            html += `<tr><td style="text-align:center;">${idx + 1}</td><td style="text-align:center;">${escapeHtml(item.originalName)}</td><td style="text-align:center;">${escapeHtml(item.type)}</td><td style="text-align:center;">${item.count} ${unit}</td><td style="text-align:center;">${escapeHtml(formatDateShort(item.dateStr))}</td><td style="text-align:center;"><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td></tr>`; 
-        }); 
-        tbody.innerHTML = html; 
-        document.querySelectorAll('.delete-btn').forEach(btn => { 
-            btn.addEventListener('click', async (e) => { 
-                const id = btn.getAttribute('data-id'); 
-                if (confirm("حذف الإجازة؟")) { 
-                    await callAPI("delete", { id: id }); 
-                    await loadAllLeaves(); 
-                } 
-            }); 
-        }); 
+        const tbody = document.getElementById('adminTableBody'); if (!dataToUse.length) { tbody.innerHTML = '<tr><td colspan="6">لا توجد إجازات</td></tr>'; return; } 
+        let html = ''; dataToUse.forEach((item, idx) => { let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم'; html += `<tr><td>${idx + 1}</td><td>${escapeHtml(item.originalName)}</td><td>${escapeHtml(item.type)}</td><td>${item.count} ${unit}</td><td>${escapeHtml(formatDateCorrected(item.dateStr))}</td><td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td></tr>`; }); tbody.innerHTML = html; 
+        document.querySelectorAll('.delete-btn').forEach(btn => { btn.addEventListener('click', async (e) => { const id = btn.getAttribute('data-id'); if (confirm("حذف الإجازة؟")) { await callAPI("delete", { id: id }); await loadAllLeaves(); } }); }); 
     }
     
-    async function addMultipleLeaves() { 
-        if (!isAdmin) { alert("غير مصرح!"); return; } 
-        const nameInputs = document.querySelectorAll('.multi-name'); 
-        const leaveType = document.getElementById('multiLeaveType').value; 
-        const count = parseFloat(document.getElementById('multiLeaveCount').value); 
-        if (isNaN(count) || count <= 0) { alert("أدخل عدداً"); return; } 
-        const names = Array.from(nameInputs).map(i => i.value.trim()).filter(n => n !== ""); 
-        if (names.length === 0) { alert("أدخل اسم"); return; } 
-        for (let name of names) { 
-            const normalized = getNormalizedName(name); 
-            await callAPI("add", { originalName: name, normalizedName: normalized, leaveType, count, dateStr: getCurrentDateString(), uniqueId: Date.now() + Math.random().toString(36) }); 
-        } 
-        nameInputs.forEach(i => i.value = ''); 
-        await loadAllLeaves(); 
-        alert(`✅ تمت إضافة ${names.length} إجازة`); 
-    }
-    
-    async function addSingleLeave() { 
-        if (!isAdmin) { alert("غير مصرح!"); return; } 
-        const name = document.getElementById('singleName').value.trim(); 
-        const type = document.getElementById('singleType').value; 
-        const count = parseFloat(document.getElementById('singleCount').value); 
-        if (!name || isNaN(count) || count <= 0) { alert("بيانات ناقصة"); return; } 
-        const normalized = getNormalizedName(name); 
-        await callAPI("add", { originalName: name, normalizedName: normalized, leaveType: type, count, dateStr: getCurrentDateString(), uniqueId: Date.now() + Math.random().toString(36) }); 
-        document.getElementById('singleName').value = ''; 
-        document.getElementById('singleCount').value = '1'; 
-        await loadAllLeaves(); 
-        alert("✅ تمت الإضافة"); 
-    }
-    
-    function applyFilter() { 
-        const fromVal = document.getElementById('filterFromDate').value; 
-        const toVal = document.getElementById('filterToDate').value; 
-        activeFilter.fromDate = fromVal ? new Date(fromVal) : null; 
-        activeFilter.toDate = toVal ? new Date(toVal) : null; 
-        if (activeFilter.fromDate) activeFilter.fromDate.setHours(0, 0, 0, 0); 
-        if (activeFilter.toDate) activeFilter.toDate.setHours(23, 59, 59, 999); 
-        applyFilterToLeaves(); 
-        if (isAdmin) { renderAdminStats(); renderAdminTable(); } 
-    }
-    
-    function clearFilter() { 
-        document.getElementById('filterFromDate').value = ''; 
-        document.getElementById('filterToDate').value = ''; 
-        activeFilter = { fromDate: null, toDate: null }; 
-        filteredLeaves = []; 
-        document.getElementById('filterStatus').innerHTML = ''; 
-        if (isAdmin) { renderAdminStats(); renderAdminTable(); } 
-    }
+    async function addMultipleLeaves() { if (!isAdmin) { alert("غير مصرح!"); return; } const nameInputs = document.querySelectorAll('.multi-name'); const leaveType = document.getElementById('multiLeaveType').value; const count = parseFloat(document.getElementById('multiLeaveCount').value); if (isNaN(count) || count <= 0) { alert("أدخل عدداً"); return; } const names = Array.from(nameInputs).map(i => i.value.trim()).filter(n => n !== ""); if (names.length === 0) { alert("أدخل اسم"); return; } for (let name of names) { const normalized = getNormalizedName(name); await callAPI("add", { originalName: name, normalizedName: normalized, leaveType, count, dateStr: getCurrentDateString(), uniqueId: Date.now() + Math.random().toString(36) }); } nameInputs.forEach(i => i.value = ''); await loadAllLeaves(); alert(`✅ تمت إضافة ${names.length} إجازة`); }
+    async function addSingleLeave() { if (!isAdmin) { alert("غير مصرح!"); return; } const name = document.getElementById('singleName').value.trim(); const type = document.getElementById('singleType').value; const count = parseFloat(document.getElementById('singleCount').value); if (!name || isNaN(count) || count <= 0) { alert("بيانات ناقصة"); return; } const normalized = getNormalizedName(name); await callAPI("add", { originalName: name, normalizedName: normalized, leaveType: type, count, dateStr: getCurrentDateString(), uniqueId: Date.now() + Math.random().toString(36) }); document.getElementById('singleName').value = ''; document.getElementById('singleCount').value = '1'; await loadAllLeaves(); alert("✅ تمت الإضافة"); }
+    function applyFilter() { const fromVal = document.getElementById('filterFromDate').value; const toVal = document.getElementById('filterToDate').value; activeFilter.fromDate = fromVal ? new Date(fromVal) : null; activeFilter.toDate = toVal ? new Date(toVal) : null; if (activeFilter.fromDate) activeFilter.fromDate.setHours(0, 0, 0, 0); if (activeFilter.toDate) activeFilter.toDate.setHours(23, 59, 59, 999); applyFilterToLeaves(); if (isAdmin) { renderAdminStats(); renderAdminTable(); } }
+    function clearFilter() { document.getElementById('filterFromDate').value = ''; document.getElementById('filterToDate').value = ''; activeFilter = { fromDate: null, toDate: null }; filteredLeaves = []; document.getElementById('filterStatus').innerHTML = ''; if (isAdmin) { renderAdminStats(); renderAdminTable(); } }
 
-    function getReportLetterhead() { 
-        return `<div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #1e4a76; padding-bottom:12px;">
-            <h3>وزارة التعليم العالي والبحث العلمي</h3>
-            <p>هيئة البحث العلمي</p>
-            <p>مركز البحوث الزراعية</p>
-            <p><strong>قسم علوم الأغذية والتقانات الاحيائية</strong></p>
-            <hr></div>`; 
-    }
-    
-    function getReportFooter() { 
-        return `<div style="margin-top:30px; text-align:center; font-size:12px; border-top:1px dashed #ccc; padding-top:10px;">📋 التقرير بواسطة ملف إجازات القسم</div>`; 
-    }
+    function getReportLetterhead() { return `<div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #1e4a76; padding-bottom:12px;"><h3>وزارة التعليم العالي والبحث العلمي</h3><p>هيئة البحث العلمي</p><p>مركز البحوث الزراعية</p><p><strong>قسم علوم الأغذية والتقانات الاحيائية</strong></p><hr></div>`; }
+    function getReportFooter() { return `<div style="margin-top:30px; text-align:center; font-size:12px; border-top:1px dashed #ccc; padding-top:10px;">📋 التقرير بواسطة ملف إجازات القسم</div>`; }
 
-    function getLeavesBySpecificDate(dateObj) { 
-        if (!dateObj) return []; 
-        return leavesArray.filter(l => isSameDate(l.dateStr, dateObj)); 
-    }
+    function getLeavesBySpecificDate(dateObj) { return leavesArray.filter(l => isSameDate(l.dateStr, dateObj)); }
     
     function displayDateReport(leavesOnDate, targetDate) {
         const area = document.getElementById('dateSearchResultArea');
-        if (!leavesOnDate.length) { 
-            area.innerHTML = `<div style="padding:12px;background:#ffe6e6;border-radius:16px;">⚠️ لا توجد إجازات بتاريخ ${targetDate.day}/${targetDate.month}/${targetDate.year}</div>`; 
-            area.style.display = 'block'; 
-            return; 
-        }
+        if (!leavesOnDate.length) { area.innerHTML = `<div style="padding:12px;background:#ffe6e6;border-radius:16px;">⚠️ لا توجد إجازات بتاريخ ${targetDate.day}/${targetDate.month}/${targetDate.year}</div>`; area.style.display = 'block'; return; }
         let tableHtml = `<div style="background:#fff3e0; border-radius:20px; padding:15px;"><h4>📋 تقرير الإجازات ليوم ${targetDate.day}/${targetDate.month}/${targetDate.year}</h4><div class="table-wrapper"><table class="data-table"><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>`;
-        leavesOnDate.forEach((l, idx) => { 
-            let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم'; 
-            tableHtml += `<tr><td style="text-align:center;">${idx + 1}</td><td style="text-align:center;">${escapeHtml(l.originalName)}</td style="text-align:center;">${escapeHtml(l.type)}</td style="text-align:center;">${l.count} ${unit}</td style="text-align:center;">${escapeHtml(formatDateShort(l.dateStr))}</td><td style="text-align:center;">${escapeHtml(formatDateShort(l.dateStr))}</td><td style="text-align:center;">${escapeHtml(formatDateShort(l.dateStr))}</td></tr>`; }); 
-        tableHtml += `</tbody></td></div><div style="margin-top:15px;"><button id="printInlineDateBtn" class="btn-print btn">🖨️ طباعة</button><button id="pdfInlineDateBtn" class="btn-print btn" style="background:#2c3e50;">📄 PDF</button></div></div>`;
-        area.innerHTML = tableHtml; 
-        area.style.display = 'block';
+        leavesOnDate.forEach((l, idx) => { let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم'; tableHtml += `<tr><td>${idx + 1}</td><td>${escapeHtml(l.originalName)}</td><td>${escapeHtml(l.type)}</td><td>${l.count} ${unit}</td><td>${escapeHtml(formatDateCorrected(l.dateStr))}</td></tr>`; });
+        tableHtml += `</tbody></table></div><div style="margin-top:15px;"><button id="printInlineDateBtn" class="btn-print btn">🖨️ طباعة</button><button id="pdfInlineDateBtn" class="btn-print btn" style="background:#2c3e50;">📄 PDF</button></div></div>`;
+        area.innerHTML = tableHtml; area.style.display = 'block';
         document.getElementById('printInlineDateBtn')?.addEventListener('click', () => printDateReport(leavesOnDate, targetDate));
         document.getElementById('pdfInlineDateBtn')?.addEventListener('click', () => pdfDateReport(leavesOnDate, targetDate));
     }
@@ -483,54 +288,45 @@
     function printDateReport(leavesArrayForDate, targetDate) {
         const w = window.open('', '_blank');
         let tableHtml = `<table border="1" cellpadding="6" style="width:100%; border-collapse:collapse; text-align:center;"><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>`;
-        leavesArrayForDate.forEach((l, idx) => { 
-            let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم'; 
-            tableHtml += `<tr><td style="text-align:center;">${idx + 1}</td><td style="text-align:center;">${l.originalName}</td><td style="text-align:center;">${l.type}</td><td style="text-align:center;">${l.count} ${unit}</td><td style="text-align:center;">${formatDateShort(l.dateStr)}</tr>`; 
-        });
+        leavesArrayForDate.forEach((l, idx) => { let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم'; tableHtml += `<tr><td>${idx + 1}</td><td>${l.originalName}</td><td>${l.type}</td><td>${l.count} ${unit}</td><td>${formatDateCorrected(l.dateStr)}</td></tr>`; });
         tableHtml += `</tbody></table>`;
         w.document.write(`<html dir="rtl"><head><meta charset="UTF-8"><title>تقرير إجازات</title><style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #aaa;padding:6px;text-align:center;} th{background:#1e4a76;color:white;}</style></head><body>${getReportLetterhead()}<h2 style="text-align:center;">تقرير الإجازات ليوم ${targetDate.day}/${targetDate.month}/${targetDate.year}</h2><div>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}</div>${tableHtml}${getReportFooter()}</body></html>`);
-        w.document.close(); 
-        w.print();
+        w.document.close(); w.print();
     }
     
     async function pdfDateReport(leavesArrayForDate, targetDate) {
         const { jsPDF } = window.jspdf;
         if (!jsPDF) { alert("جاري تحميل المكتبة..."); return; }
         const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        doc.setFont("helvetica"); 
-        doc.setR2L(true);
-        doc.setFontSize(14); 
-        doc.text("وزارة التعليم العالي والبحث العلمي", 105, 20, { align: "center" });
-        doc.setFontSize(12); 
-        doc.text("هيئة البحث العلمي", 105, 30, { align: "center" }); 
-        doc.text("مركز البحوث الزراعية", 105, 40, { align: "center" });
-        doc.setFontSize(12); 
-        doc.setFont("helvetica", "bold"); 
-        doc.text("قسم علوم الأغذية والتقانات الاحيائية", 105, 52, { align: "center" });
-        doc.setFontSize(11); 
-        doc.setFont("helvetica", "normal"); 
-        doc.text(`تقرير الإجازات ليوم ${targetDate.day}/${targetDate.month}/${targetDate.year}`, 105, 70, { align: "center" });
+        doc.setFont("helvetica"); doc.setR2L(true);
+        doc.setFontSize(14); doc.text("وزارة التعليم العالي والبحث العلمي", 105, 20, { align: "center" });
+        doc.setFontSize(12); doc.text("هيئة البحث العلمي", 105, 30, { align: "center" }); doc.text("مركز البحوث الزراعية", 105, 40, { align: "center" });
+        doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.text("قسم علوم الأغذية والتقانات الاحيائية", 105, 52, { align: "center" });
+        doc.setFontSize(11); doc.setFont("helvetica", "normal"); doc.text(`تقرير الإجازات ليوم ${targetDate.day}/${targetDate.month}/${targetDate.year}`, 105, 70, { align: "center" });
         doc.text(`تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}`, 20, 85);
-        const tableData = leavesArrayForDate.map((l, idx) => [idx + 1, l.originalName, l.type, `${l.count} ${l.type === 'زمنية' ? 'ساعة' : 'يوم'}`, formatDateShort(l.dateStr)]);
+        const tableData = leavesArrayForDate.map((l, idx) => [idx + 1, l.originalName, l.type, `${l.count} ${l.type === 'زمنية' ? 'ساعة' : 'يوم'}`, formatDateCorrected(l.dateStr)]);
         doc.autoTable({ head: [['#', 'الاسم', 'النوع', 'المدة', 'التاريخ']], body: tableData, startY: 95, styles: { fontSize: 9, halign: 'center' }, headStyles: { fillColor: [30, 74, 118] } });
         doc.text("التقرير بواسطة ملف إجازات القسم", 105, doc.lastAutoTable.finalY + 15, { align: "center" });
         doc.save(`تقرير_اجازات_${targetDate.day}_${targetDate.month}_${targetDate.year}.pdf`);
     }
 
-    // عرض نتائج البحث
+    // ========== البحث عن موظف - جدول نظيف ومرتب ==========
     function searchEmployee() {
         const term = document.getElementById('searchInput').value.trim();
         const resDiv = document.getElementById('searchResults');
         if (!term) { resDiv.style.display = 'none'; return; }
+        
         const normalizedSearch = getNormalizedName(term);
         const dataToSearch = filteredLeaves.length ? filteredLeaves : leavesArray;
         const empLeaves = dataToSearch.filter(l => l.normalizedName === normalizedSearch);
+        
         if (empLeaves.length === 0) { 
             resDiv.innerHTML = `<div style="text-align:center;color:#c0392b;padding:30px;">❌ لا توجد إجازات للموظف "${escapeHtml(term)}"</div>`; 
             resDiv.style.display = 'block'; 
             return; 
         }
         
+        // حساب الإحصائيات
         let totals = { اعتيادية: 0, مرضية: 0, رسمية: 0, زمنية: 0 };
         empLeaves.forEach(l => { 
             if (l.type === 'اعتيادية') totals.اعتيادية += l.count; 
@@ -539,93 +335,81 @@
             else if (l.type === 'زمنية') totals.زمنية += l.count; 
         });
         
-        let tableHtml = `<div class="employee-stats"><h3>📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h3><div class="stats-list">
-            <div class="stat-item"><span class="stat-label">✅ الاعتيادية</span><span class="stat-value">${totals.اعتيادية} يوم</span></div>
-            <div class="stat-item"><span class="stat-label">🏢 الرسمية</span><span class="stat-value">${totals.رسمية} يوم</span></div>
-            <div class="stat-item"><span class="stat-label">⏱️ الزمنية</span><span class="stat-value">${totals.زمنية} ساعة</span></div>
-        </div></div><h5>📋 قائمة الإجازات (${empLeaves.length} إجازة):</h5><div class="table-wrapper"><table class="data-table"><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>`;
-        
-        empLeaves.forEach((l, idx) => {
-            let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
-            tableHtml += `<tr><td style="text-align:center;">${idx + 1}</td><td style="text-align:center; word-break:break-word;">${escapeHtml(l.originalName)}</td><td style="text-align:center;">${escapeHtml(l.type)}</td><td style="text-align:center;">${l.count} ${unit}</td><td style="text-align:center;">${escapeHtml(formatDateShort(l.dateStr))}</td></tr>`;
+        // بناء الجدول - كل إجازة في صف منفصل
+        let rows = '';
+        empLeaves.forEach((leave, index) => {
+            let unit = (leave.type === 'زمنية') ? 'ساعة' : 'يوم';
+            rows += `<tr>
+                <td style="text-align:center;">${index + 1}</td>
+                <td style="text-align:center;">${escapeHtml(leave.originalName)}</td>
+                <td style="text-align:center;">${escapeHtml(leave.type)}</td>
+                <td style="text-align:center;">${leave.count} ${unit}</td>
+                <td style="text-align:center;">${escapeHtml(formatDateCorrected(leave.dateStr))}</td>
+            </tr>`;
         });
         
-        tableHtml += `</tbody></table></div><div style="margin-top:20px;"><button id="printSearchResultBtn" class="btn-print btn">🖨️ طباعة النتائج</button><button id="pdfSearchResultBtn" class="btn-print btn" style="background:#2c3e50; margin-right:10px;">📄 حفظ PDF</button></div>`;
+        const tableHtml = `
+            <div class="employee-stats">
+                <h3>📊 إحصائيات: ${escapeHtml(normalizedSearch)}</h3>
+                <div class="stats-list">
+                    <div class="stat-item"><span class="stat-label">✅ الاعتيادية</span><span class="stat-value">${totals.اعتيادية} يوم</span></div>
+                    <div class="stat-item"><span class="stat-label">🏢 الرسمية</span><span class="stat-value">${totals.رسمية} يوم</span></div>
+                    <div class="stat-item"><span class="stat-label">⏱️ الزمنية</span><span class="stat-value">${totals.زمنية} ساعة</span></div>
+                </div>
+            </div>
+            <h5>📋 قائمة الإجازات (${empLeaves.length} إجازة):</h5>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+            <div style="margin-top:20px;">
+                <button id="printSearchResultBtn" class="btn-print btn">🖨️ طباعة النتائج</button>
+                <button id="pdfSearchResultBtn" class="btn-print btn" style="background:#2c3e50; margin-right:10px;">📄 حفظ PDF</button>
+            </div>
+        `;
+        
         resDiv.innerHTML = tableHtml;
         resDiv.style.display = 'block';
         
+        // طباعة النتائج
         document.getElementById('printSearchResultBtn')?.addEventListener('click', () => {
             const w = window.open('', '_blank');
-            let printTable = `<table border="1" cellpadding="6" style="width:100%; border-collapse:collapse; text-align:center;"><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>`;
-            empLeaves.forEach((l, idx) => { 
-                let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم'; 
-                printTable += `<tr><td style="text-align:center;">${idx + 1}</td><td style="text-align:center;">${l.originalName}</td><td style="text-align:center;">${l.type}</td><td style="text-align:center;">${l.count} ${unit}</td><td style="text-align:center;">${formatDateShort(l.dateStr)}</tr>`; 
+            let printRows = '';
+            empLeaves.forEach((l, idx) => {
+                let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
+                printRows += `<tr><td>${idx + 1}</td><td>${l.originalName}</td><td>${l.type}</td><td>${l.count} ${unit}</td><td>${formatDateCorrected(l.dateStr)}</td></tr>`;
             });
-            printTable += `</tbody></table>`;
-            w.document.write(`<html dir="rtl"><head><meta charset="UTF-8"><title>بحث الموظف</title><style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #aaa;padding:6px;text-align:center;} th{background:#1e4a76;color:white;}</style></head><body>${getReportLetterhead()}<h3>نتائج بحث: ${escapeHtml(normalizedSearch)}</h3><div>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}</div>${document.querySelector('#searchResults .employee-stats').outerHTML}${printTable}${getReportFooter()}</body></html>`);
-            w.document.close(); 
-            w.print();
+            w.document.write(`<html dir="rtl"><head><meta charset="UTF-8"><title>بحث الموظف</title><style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #aaa;padding:8px;text-align:center;} th{background:#1e4a76;color:white;}</style></head><body>${getReportLetterhead()}<h3>نتائج بحث: ${escapeHtml(normalizedSearch)}</h3><div>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}</div>${document.querySelector('#searchResults .employee-stats').outerHTML}<table border="1" cellpadding="6" style="width:100%; border-collapse:collapse; text-align:center;"><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>${printRows}</tbody></table>${getReportFooter()}</body></html>`);
+            w.document.close(); w.print();
         });
         
+        // حفظ PDF
         document.getElementById('pdfSearchResultBtn')?.addEventListener('click', async () => {
             const { jsPDF } = window.jspdf;
             if (!jsPDF) { alert("جاري تحميل المكتبة..."); return; }
             const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-            doc.setFont("helvetica"); 
-            doc.setR2L(true);
-            doc.setFontSize(14); 
-            doc.text("وزارة التعليم العالي والبحث العلمي", 105, 20, { align: "center" });
-            doc.setFontSize(12); 
-            doc.text("هيئة البحث العلمي", 105, 30, { align: "center" }); 
-            doc.text("مركز البحوث الزراعية", 105, 40, { align: "center" });
-            doc.setFontSize(12); 
-            doc.setFont("helvetica", "bold"); 
-            doc.text("قسم علوم الأغذية والتقانات الاحيائية", 105, 52, { align: "center" });
-            doc.setFontSize(11); 
-            doc.setFont("helvetica", "normal"); 
-            doc.text(`نتائج بحث الموظف: ${normalizedSearch}`, 20, 75); 
-            doc.text(`تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}`, 20, 88);
-            const bodyData = empLeaves.map((l, idx) => [idx + 1, l.originalName, l.type, `${l.count} ${l.type === 'زمنية' ? 'ساعة' : 'يوم'}`, formatDateShort(l.dateStr)]);
+            doc.setFont("helvetica"); doc.setR2L(true);
+            doc.setFontSize(14); doc.text("وزارة التعليم العالي والبحث العلمي", 105, 20, { align: "center" });
+            doc.setFontSize(12); doc.text("هيئة البحث العلمي", 105, 30, { align: "center" }); doc.text("مركز البحوث الزراعية", 105, 40, { align: "center" });
+            doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.text("قسم علوم الأغذية والتقانات الاحيائية", 105, 52, { align: "center" });
+            doc.setFontSize(11); doc.setFont("helvetica", "normal"); doc.text(`نتائج بحث الموظف: ${normalizedSearch}`, 20, 75); doc.text(`تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}`, 20, 88);
+            const bodyData = empLeaves.map((l, idx) => [idx + 1, l.originalName, l.type, `${l.count} ${l.type === 'زمنية' ? 'ساعة' : 'يوم'}`, formatDateCorrected(l.dateStr)]);
             doc.autoTable({ head: [['#', 'الاسم', 'النوع', 'المدة', 'التاريخ']], body: bodyData, startY: 100, styles: { fontSize: 9, halign: 'center' }, headStyles: { fillColor: [30, 74, 118] } });
             doc.text("التقرير بواسطة ملف إجازات القسم", 105, doc.lastAutoTable.finalY + 15, { align: "center" });
             doc.save(`بحث_${normalizedSearch}.pdf`);
         });
     }
     
-    function clearSearch() { 
-        document.getElementById('searchInput').value = ''; 
-        document.getElementById('searchResults').style.display = 'none'; 
-    }
-    
-    function escapeHtml(str) { 
-        if (!str) return ''; 
-        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); 
-    }
-    
+    function clearSearch() { document.getElementById('searchInput').value = ''; document.getElementById('searchResults').style.display = 'none'; }
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
     function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
-    
-    function login() { 
-        const pass = document.getElementById('passwordInput').value; 
-        if (pass === ADMIN_PASSWORD) { 
-            isAdmin = true; 
-            hideLogin(); 
-            document.getElementById('adminPanel').style.display = 'block'; 
-            document.getElementById('welcomeMsg').innerHTML = '👋 مرحباً بك في لوحة الإدارة'; 
-            loadAllLeaves(); 
-        } else { 
-            alert("كلمة المرور غير صحيحة"); 
-        } 
-        document.getElementById('passwordInput').value = ''; 
-    }
-    
-    function logout() { 
-        isAdmin = false; 
-        document.getElementById('adminPanel').style.display = 'none'; 
-        document.getElementById('welcomeMsg').innerHTML = '🔍 يمكنك البحث عن موظف لعرض إجازاته وإحصائياته'; 
-        clearSearch(); 
-        document.getElementById('dateSearchResultArea').style.display = 'none'; 
-    }
+    function login() { const pass = document.getElementById('passwordInput').value; if (pass === ADMIN_PASSWORD) { isAdmin = true; hideLogin(); document.getElementById('adminPanel').style.display = 'block'; document.getElementById('welcomeMsg').innerHTML = '👋 مرحباً بك في لوحة الإدارة'; loadAllLeaves(); } else { alert("كلمة المرور غير صحيحة"); } document.getElementById('passwordInput').value = ''; }
+    function logout() { isAdmin = false; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('welcomeMsg').innerHTML = '🔍 يمكنك البحث عن موظف لعرض إجازاته وإحصائياته'; clearSearch(); document.getElementById('dateSearchResultArea').style.display = 'none'; }
     
     document.getElementById('adminBtn').addEventListener('click', showLogin);
     document.getElementById('loginBtn').addEventListener('click', login);
@@ -638,32 +422,9 @@
     document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('applyFilterBtn').addEventListener('click', applyFilter);
     document.getElementById('clearFilterBtn').addEventListener('click', clearFilter);
-    document.getElementById('searchByDateBtn').addEventListener('click', () => { 
-        const raw = document.getElementById('specificDateInput').value; 
-        const dateObj = parseUserDate(raw); 
-        if (!dateObj) { 
-            alert("صيغة تاريخ غير صالحة. استخدم مثال: 3/2/2026"); 
-            return; 
-        } 
-        const leavesOn = getLeavesBySpecificDate(dateObj); 
-        displayDateReport(leavesOn, dateObj); 
-    });
-    document.getElementById('printDateReportBtn').addEventListener('click', () => { 
-        const raw = document.getElementById('specificDateInput').value; 
-        const d = parseUserDate(raw); 
-        if (!d) { alert("أدخل تاريخ صالح"); return; } 
-        const leavesOn = getLeavesBySpecificDate(d); 
-        if (leavesOn.length) printDateReport(leavesOn, d); 
-        else alert("لا توجد إجازات"); 
-    });
-    document.getElementById('pdfDateReportBtn').addEventListener('click', async () => { 
-        const raw = document.getElementById('specificDateInput').value; 
-        const d = parseUserDate(raw); 
-        if (!d) { alert("أدخل تاريخ صالح"); return; } 
-        const leavesOn = getLeavesBySpecificDate(d); 
-        if (leavesOn.length) await pdfDateReport(leavesOn, d); 
-        else alert("لا توجد بيانات"); 
-    });
+    document.getElementById('searchByDateBtn').addEventListener('click', () => { const raw = document.getElementById('specificDateInput').value; const dateObj = parseUserDate(raw); if (!dateObj) { alert("صيغة تاريخ غير صالحة. استخدم مثال: 19/4/2026"); return; } const leavesOn = getLeavesBySpecificDate(dateObj); displayDateReport(leavesOn, dateObj); });
+    document.getElementById('printDateReportBtn').addEventListener('click', () => { const raw = document.getElementById('specificDateInput').value; const d = parseUserDate(raw); if (!d) { alert("أدخل تاريخ صالح"); return; } const leavesOn = getLeavesBySpecificDate(d); if (leavesOn.length) printDateReport(leavesOn, d); else alert("لا توجد إجازات"); });
+    document.getElementById('pdfDateReportBtn').addEventListener('click', async () => { const raw = document.getElementById('specificDateInput').value; const d = parseUserDate(raw); if (!d) { alert("أدخل تاريخ صالح"); return; } const leavesOn = getLeavesBySpecificDate(d); if (leavesOn.length) await pdfDateReport(leavesOn, d); else alert("لا توجد بيانات"); });
     
     loadAllLeaves();
 })();
