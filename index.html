@@ -131,7 +131,11 @@
         <div class="filter-section">
             <div class="filter-group"><label>📅 من تاريخ</label><input type="date" id="filterFromDate"></div>
             <div class="filter-group"><label>📅 إلى تاريخ</label><input type="date" id="filterToDate"></div>
-            <div class="filter-group"><button id="applyFilterBtn" class="btn-filter btn">🔍 تصفية</button><button id="clearFilterBtn" class="btn-secondary btn" style="background:#95a5a6;">🗑️ إلغاء التصفية</button></div>
+            <div class="filter-group">
+                <button id="applyFilterBtn" class="btn-filter btn">🔍 تصفية</button>
+                <button id="clearFilterBtn" class="btn-secondary btn" style="background:#95a5a6;">🗑️ إلغاء التصفية</button>
+                <button id="printFilteredDataBtn" class="btn-print btn" style="margin-top: 5px;">🖨️ طباعة المفلتر</button>
+            </div>
             <div id="filterStatus" class="filter-badge"></div>
         </div>
         
@@ -153,8 +157,8 @@
         </div>
         <div class="multi-names-section"><div class="multi-names-title">➕ إضافة فردية</div><div style="display: flex; flex-wrap: wrap; gap: 10px;"><input type="text" id="singleName" placeholder="الاسم" style="flex:2; padding:8px; border-radius:25px;"><select id="singleType" style="flex:1; padding:8px; border-radius:25px;"><option value="اعتيادية">اعتيادية</option><option value="مرضية">مرضية</option><option value="رسمية">رسمية</option><option value="زمنية">زمنية</option></select><input type="number" id="singleCount" value="1" style="width:80px; padding:8px; border-radius:25px;"><button id="addSingleBtn" class="btn">➕ إضافة</button></div></div>
         <div class="actions-bar"><button id="refreshBtn" class="btn-secondary btn">🔄 تحديث</button><button id="logoutBtn" class="btn-secondary btn" style="background:#7f8c8d;">🚪 خروج</button></div>
-        <div class="stats-full"><div class="stats-table-wrapper"><div class="stats-title">📈 إحصائيات الإجازات</div><table class="stats-table"><thead><tr><th>الموظف</th><th>اعتيادية</th><th>مرضية</th><th>رسمية</th><th>زمنية</th><th>الإجمالي</th></tr></thead><tbody id="statsTableBody">...</tbody></table></div></div>
-        <div class="table-wrapper"><tr><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="adminTableBody"></tbody></table></div>
+        <div class="stats-full"><div class="stats-table-wrapper"><div class="stats-title">📈 إحصائيات الإجازات</div><table class="stats-table"><thead><tr><th>الموظف</th><th>اعتيادية</th><th>مرضية</th><th>رسمية</th><th>زمنية</th><th>الإجمالي</th></tr></thead><tbody id="statsTableBody">...</tbody><table></div></div>
+        <div class="table-wrapper"><table><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></tr></thead><tbody id="adminTableBody"></tbody></table></div>
     </div>
     <div class="footer-note"> ✅ تصميم ذاتية القسم ✅ </div>
     <div class="footer-note"> ✅ اعتماد بيانات من كروب الموقف ✅ </div>
@@ -171,7 +175,6 @@
     let isAdmin = false;
     let activeFilter = { fromDate: null, toDate: null };
 
-    // ========== دوال التاريخ مع تصحيح +1 ==========
     function extractDateFromString(dateStr) {
         if (!dateStr) return null;
         let str = dateStr.toString().trim();
@@ -272,6 +275,23 @@
     function getReportLetterhead() { return `<div style="text-align:center; margin-bottom:20px; border-bottom:2px solid #1e4a76; padding-bottom:12px;"><h3>وزارة التعليم العالي والبحث العلمي</h3><p>هيئة البحث العلمي</p><p>مركز البحوث الزراعية</p><p><strong>قسم علوم الأغذية والتقانات الاحيائية</strong></p><hr></div>`; }
     function getReportFooter() { return `<div style="margin-top:30px; text-align:center; font-size:12px; border-top:1px dashed #ccc; padding-top:10px;">📋 التقرير بواسطة ملف إجازات القسم</div>`; }
 
+    // طباعة البيانات المفلترة حسب الفترة الزمنية
+    async function printFilteredData() {
+        const dataToPrint = filteredLeaves.length ? filteredLeaves : leavesArray;
+        if (!dataToPrint.length) { alert("لا توجد بيانات للطباعة"); return; }
+        let fromText = activeFilter.fromDate ? `من ${activeFilter.fromDate.getDate()}/${activeFilter.fromDate.getMonth()+1}/${activeFilter.fromDate.getFullYear()}` : '';
+        let toText = activeFilter.toDate ? `إلى ${activeFilter.toDate.getDate()}/${activeFilter.toDate.getMonth()+1}/${activeFilter.toDate.getFullYear()}` : '';
+        let periodText = (fromText || toText) ? `للفترة ${fromText} ${toText}` : 'جميع البيانات';
+        const w = window.open('', '_blank');
+        let rows = '';
+        dataToPrint.forEach((l, idx) => {
+            let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
+            rows += `<tr><td>${idx+1}</td><td>${escapeHtml(l.originalName)}</td><td>${escapeHtml(l.type)}</td><td>${l.count} ${unit}</td><td>${formatDateCorrected(l.dateStr)}</td></tr>`;
+        });
+        w.document.write(`<html dir="rtl"><head><meta charset="UTF-8"><title>تقرير الإجازات المفلترة</title><style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #aaa;padding:8px;text-align:center;} th{background:#1e4a76;color:white;}</style></head><body>${getReportLetterhead()}<h3 style="text-align:center;">تقرير الإجازات ${periodText}</h3><div>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}</div><table border="1" cellpadding="6" style="width:100%; border-collapse:collapse; text-align:center;"><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>${rows}</tbody></table>${getReportFooter()}</body></html>`);
+        w.document.close(); w.print();
+    }
+
     function getLeavesBySpecificDate(dateObj) { return leavesArray.filter(l => isSameDate(l.dateStr, dateObj)); }
     
     function displayDateReport(leavesOnDate, targetDate) {
@@ -310,7 +330,6 @@
         doc.save(`تقرير_اجازات_${targetDate.day}_${targetDate.month}_${targetDate.year}.pdf`);
     }
 
-    // ========== البحث عن موظف - جدول نظيف ومرتب ==========
     function searchEmployee() {
         const term = document.getElementById('searchInput').value.trim();
         const resDiv = document.getElementById('searchResults');
@@ -326,7 +345,6 @@
             return; 
         }
         
-        // حساب الإحصائيات
         let totals = { اعتيادية: 0, مرضية: 0, رسمية: 0, زمنية: 0 };
         empLeaves.forEach(l => { 
             if (l.type === 'اعتيادية') totals.اعتيادية += l.count; 
@@ -335,17 +353,10 @@
             else if (l.type === 'زمنية') totals.زمنية += l.count; 
         });
         
-        // بناء الجدول - كل إجازة في صف منفصل
         let rows = '';
         empLeaves.forEach((leave, index) => {
             let unit = (leave.type === 'زمنية') ? 'ساعة' : 'يوم';
-            rows += `<tr>
-                <td style="text-align:center;">${index + 1}</td>
-                <td style="text-align:center;">${escapeHtml(leave.originalName)}</td>
-                <td style="text-align:center;">${escapeHtml(leave.type)}</td>
-                <td style="text-align:center;">${leave.count} ${unit}</td>
-                <td style="text-align:center;">${escapeHtml(formatDateCorrected(leave.dateStr))}</td>
-            </tr>`;
+            rows += `<tr><td style="text-align:center;">${index + 1}</td><td style="text-align:center;">${escapeHtml(leave.originalName)}</td><td style="text-align:center;">${escapeHtml(leave.type)}</td><td style="text-align:center;">${leave.count} ${unit}</td><td style="text-align:center;">${escapeHtml(formatDateCorrected(leave.dateStr))}</td></tr>`;
         });
         
         const tableHtml = `
@@ -360,9 +371,7 @@
             <h5>📋 قائمة الإجازات (${empLeaves.length} إجازة):</h5>
             <div class="table-wrapper">
                 <table class="data-table">
-                    <thead>
-                        <tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr>
-                    </thead>
+                    <thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead>
                     <tbody>${rows}</tbody>
                 </table>
             </div>
@@ -371,23 +380,14 @@
                 <button id="pdfSearchResultBtn" class="btn-print btn" style="background:#2c3e50; margin-right:10px;">📄 حفظ PDF</button>
             </div>
         `;
-        
-        resDiv.innerHTML = tableHtml;
-        resDiv.style.display = 'block';
-        
-        // طباعة النتائج
+        resDiv.innerHTML = tableHtml; resDiv.style.display = 'block';
         document.getElementById('printSearchResultBtn')?.addEventListener('click', () => {
             const w = window.open('', '_blank');
             let printRows = '';
-            empLeaves.forEach((l, idx) => {
-                let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم';
-                printRows += `<tr><td>${idx + 1}</td><td>${l.originalName}</td><td>${l.type}</td><td>${l.count} ${unit}</td><td>${formatDateCorrected(l.dateStr)}</td></tr>`;
-            });
+            empLeaves.forEach((l, idx) => { let unit = (l.type === 'زمنية') ? 'ساعة' : 'يوم'; printRows += `<tr><td>${idx + 1}</td><td>${l.originalName}</td><td>${l.type}</td><td>${l.count} ${unit}</td><td>${formatDateCorrected(l.dateStr)}</td></tr>`; });
             w.document.write(`<html dir="rtl"><head><meta charset="UTF-8"><title>بحث الموظف</title><style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #aaa;padding:8px;text-align:center;} th{background:#1e4a76;color:white;}</style></head><body>${getReportLetterhead()}<h3>نتائج بحث: ${escapeHtml(normalizedSearch)}</h3><div>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}</div>${document.querySelector('#searchResults .employee-stats').outerHTML}<table border="1" cellpadding="6" style="width:100%; border-collapse:collapse; text-align:center;"><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>المدة</th><th>التاريخ</th></tr></thead><tbody>${printRows}</tbody></table>${getReportFooter()}</body></html>`);
             w.document.close(); w.print();
         });
-        
-        // حفظ PDF
         document.getElementById('pdfSearchResultBtn')?.addEventListener('click', async () => {
             const { jsPDF } = window.jspdf;
             if (!jsPDF) { alert("جاري تحميل المكتبة..."); return; }
@@ -422,6 +422,7 @@
     document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('applyFilterBtn').addEventListener('click', applyFilter);
     document.getElementById('clearFilterBtn').addEventListener('click', clearFilter);
+    document.getElementById('printFilteredDataBtn').addEventListener('click', printFilteredData);
     document.getElementById('searchByDateBtn').addEventListener('click', () => { const raw = document.getElementById('specificDateInput').value; const dateObj = parseUserDate(raw); if (!dateObj) { alert("صيغة تاريخ غير صالحة. استخدم مثال: 19/4/2026"); return; } const leavesOn = getLeavesBySpecificDate(dateObj); displayDateReport(leavesOn, dateObj); });
     document.getElementById('printDateReportBtn').addEventListener('click', () => { const raw = document.getElementById('specificDateInput').value; const d = parseUserDate(raw); if (!d) { alert("أدخل تاريخ صالح"); return; } const leavesOn = getLeavesBySpecificDate(d); if (leavesOn.length) printDateReport(leavesOn, d); else alert("لا توجد إجازات"); });
     document.getElementById('pdfDateReportBtn').addEventListener('click', async () => { const raw = document.getElementById('specificDateInput').value; const d = parseUserDate(raw); if (!d) { alert("أدخل تاريخ صالح"); return; } const leavesOn = getLeavesBySpecificDate(d); if (leavesOn.length) await pdfDateReport(leavesOn, d); else alert("لا توجد بيانات"); });
