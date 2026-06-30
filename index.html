@@ -2,654 +2,443 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة الإجازات الطويلة</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>نظام إجازات قسم علوم الأغذية والتقانات الاحيائية</title>
     <style>
-        * {
-            font-family: 'Tahoma', 'Segoe UI', sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #e8f0fe 0%, #d4e4f7 100%);
-            min-height: 100vh;
-            padding: 30px 20px;
-        }
-        .main-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
-            padding: 30px;
-            margin-bottom: 30px;
-            transition: 0.3s;
-        }
-        .main-card:hover {
-            box-shadow: 0 15px 50px rgba(0,0,0,0.18);
-        }
-        .page-title {
-            color: #1a237e;
-            font-weight: 800;
-            font-size: 28px;
-            border-right: 6px solid #3f51b5;
-            padding-right: 18px;
-        }
-        .page-title i {
-            color: #3f51b5;
-            margin-left: 12px;
-        }
-        .sub-title {
-            color: #546e7a;
-            font-size: 14px;
-            margin-top: 8px;
-            padding-right: 24px;
-        }
-        .form-label {
-            font-weight: 700;
-            color: #1a237e;
-            font-size: 14px;
-        }
-        .form-label i {
-            margin-left: 8px;
-            color: #3f51b5;
-        }
-        .form-control {
-            border-radius: 12px;
-            border: 2px solid #e3e8ee;
-            padding: 12px 16px;
-            transition: 0.3s;
-            font-size: 15px;
-        }
-        .form-control:focus {
-            border-color: #3f51b5;
-            box-shadow: 0 0 0 0.2rem rgba(63,81,181,0.2);
-        }
-        .form-control:disabled {
-            background-color: #f5f7fa;
-            color: #1a237e;
-            font-weight: 600;
-            font-size: 16px;
-        }
-        .btn-calculate {
-            background: linear-gradient(135deg, #3f51b5, #283593);
-            border: none;
-            border-radius: 12px;
-            padding: 14px 40px;
-            font-weight: 700;
-            color: white;
-            font-size: 16px;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(63,81,181,0.4);
-            width: 100%;
-        }
-        .btn-calculate:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(63,81,181,0.5);
-            color: white;
-        }
-        .btn-calculate i {
-            margin-left: 10px;
-        }
-        .btn-delete-single {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border: none;
-            border-radius: 10px;
-            padding: 7px 16px;
-            color: white;
-            font-weight: 600;
-            transition: 0.3s;
-            font-size: 13px;
-        }
-        .btn-delete-single:hover {
-            transform: scale(1.1);
-            color: white;
-        }
-        .btn-delete-all {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border: none;
-            border-radius: 10px;
-            padding: 8px 22px;
-            color: white;
-            font-weight: 700;
-            transition: 0.3s;
-            font-size: 14px;
-        }
-        .btn-delete-all:hover {
-            transform: scale(1.05);
-            color: white;
-        }
-        .btn-export {
-            background: linear-gradient(135deg, #27ae60, #1e8449);
-            border: none;
-            border-radius: 10px;
-            padding: 8px 22px;
-            color: white;
-            font-weight: 700;
-            transition: 0.3s;
-            font-size: 14px;
-        }
-        .btn-export:hover {
-            transform: scale(1.05);
-            color: white;
-        }
-        .table-container {
-            overflow-x: auto;
-            border-radius: 15px;
-            border: 1px solid #e3e8ee;
-        }
-        .table {
-            margin-bottom: 0;
-        }
-        .table thead {
-            background: linear-gradient(135deg, #1a237e, #283593);
-            color: white;
-        }
-        .table thead th {
-            padding: 14px 12px;
-            font-weight: 700;
-            font-size: 14px;
-            border: none;
-            text-align: center;
-        }
-        .table tbody td {
-            padding: 12px;
-            vertical-align: middle;
-            text-align: center;
-            font-size: 14px;
-        }
-        .table tbody tr {
-            transition: 0.2s;
-            border-bottom: 1px solid #f0f2f5;
-        }
-        .table tbody tr:hover {
-            background-color: #f5f7fc;
-        }
-        .badge-return {
-            background: #d4edda;
-            color: #155724;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: 700;
-        }
-        .badge-days {
-            background: #cce5ff;
-            color: #004085;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: 700;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: #b0bec5;
-        }
-        .empty-state i {
-            font-size: 70px;
-            margin-bottom: 15px;
-            color: #cfd8dc;
-        }
-        .empty-state h5 {
-            color: #78909c;
-        }
-        .stat-box {
-            background: white;
-            border-radius: 15px;
-            padding: 18px;
-            text-align: center;
-            border-bottom: 4px solid #3f51b5;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .stat-box .number {
-            font-size: 32px;
-            font-weight: 800;
-            color: #1a237e;
-        }
-        .stat-box .label {
-            font-size: 13px;
-            color: #78909c;
-            font-weight: 600;
-        }
-        .highlight-box {
-            background: linear-gradient(135deg, #e8eaf6, #c5cae9);
-            border-radius: 15px;
-            padding: 18px 25px;
-            border-right: 5px solid #3f51b5;
-        }
-        .highlight-box .label {
-            font-weight: 600;
-            color: #1a237e;
-            font-size: 13px;
-        }
-        .highlight-box .value {
-            font-size: 20px;
-            font-weight: 800;
-            color: #283593;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        @media (max-width: 768px) {
-            .main-card {
-                padding: 18px;
-            }
-            .stat-box {
-                margin-bottom: 12px;
-            }
-            .page-title {
-                font-size: 22px;
-            }
-            .action-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', 'Tahoma', 'Traditional Arabic', Arial, sans-serif; }
+        body { background: linear-gradient(145deg, #e0eaf4 0%, #cfdef3 100%); min-height: 100vh; margin: 0; padding: 20px; display: flex; align-items: center; justify-content: center; }
+        .container { max-width: 1300px; width: 100%; background: rgba(255, 255, 255, 0.95); border-radius: 48px; box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2); padding: 1.5rem; }
+        .header { text-align: center; border-bottom: 3px solid #1e4a76; padding-bottom: 1rem; margin-bottom: 1rem; }
+        .header h1 { margin: 0; font-size: 1.5rem; color: #0a2f44; }
+        .header .ministry { font-size: 0.85rem; color: #1e4a76; margin: 5px 0 2px; font-weight: bold; }
+        .header .sub { font-size: 0.75rem; color: #2c5a7a; margin: 0; }
+        .date-box { background: #1e4a76; padding: 0.4rem 1rem; border-radius: 60px; color: white; font-weight: bold; font-size: 0.85rem; display: inline-block; margin-top: 8px; }
+        .connection-status { margin-bottom: 1rem; padding: 5px; border-radius: 30px; font-size: 0.75rem; text-align: center; background: #d4edda; color: #155724; }
+        .search-section { background: #f0f5fa; border-radius: 28px; padding: 1.2rem; margin-bottom: 1rem; }
+        .search-row { margin-bottom: 20px; }
+        .search-row:last-child { margin-bottom: 0; }
+        .search-label { font-weight: bold; color: #1e4a76; margin-bottom: 8px; display: block; font-size: 0.85rem; text-align: right; }
+        .search-box { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .search-box input { flex: 2; min-width: 200px; padding: 10px 14px; border-radius: 40px; border: 1.5px solid #bdd4e2; font-size: 0.9rem; outline: none; }
+        .search-box button { padding: 10px 20px; }
+        .btn { background: #1e4a76; border: none; padding: 8px 18px; border-radius: 40px; color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .btn:hover { transform: scale(0.97); }
+        .btn-admin { background: #b5651e; }
+        .btn-secondary { background: #4b6f8c; }
+        .btn-success { background: #27ae60; }
+        .btn-danger { background: #c0392b; }
+        .search-results { background: white; border-radius: 24px; padding: 1rem; margin-top: 1rem; text-align: right; display: none; }
+        .table-wrapper { overflow-x: auto; border-radius: 20px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #1e4a76; color: white; padding: 10px 8px; }
+        td { padding: 8px 6px; border-bottom: 1px solid #dce5ec; }
+        .admin-panel { display: none; background: #f8fafd; border-radius: 28px; padding: 1.2rem; margin-top: 1.5rem; border: 2px solid #1e4a76; }
+        .admin-title { color: #1e4a76; margin: 0 0 15px 0; font-size: 1.1rem; font-weight: bold; }
+        .multi-names-section { background: white; border-radius: 24px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #cbdde9; }
+        .names-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .name-field { display: flex; align-items: center; gap: 8px; background: #f8fafd; padding: 5px 10px; border-radius: 40px; border: 1px solid #e2ecf3; }
+        .name-field span { font-weight: bold; color: #4b6f8c; font-size: 0.75rem; min-width: 25px; }
+        .name-field input { flex: 1; padding: 8px 10px; border: none; background: transparent; font-size: 0.85rem; outline: none; }
+        .single-controls { display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #cbdde9; }
+        .control-group { flex: 1; min-width: 140px; }
+        .control-group label { display: block; font-weight: 600; color: #0a3a5a; margin-bottom: 4px; font-size: 0.7rem; }
+        .control-group select, .control-group input { width: 100%; padding: 8px 12px; border-radius: 25px; border: 1.5px solid #bdd4e2; font-size: 0.85rem; }
+        .actions-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 1rem 0; }
+        .stats-table-wrapper { background: white; border-radius: 24px; margin-bottom: 1.2rem; overflow-x: auto; }
+        .stats-title { background: #eef3fc; padding: 0.5rem 1rem; border-radius: 24px 24px 0 0; font-weight: bold; color: #1e4a76; font-size: 0.9rem; }
+        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .stats-table th { background: #f0f5fa; padding: 8px; }
+        .stats-table td { padding: 6px; text-align: center; }
+        .delete-btn { background: #c0392b; color: white; border: none; border-radius: 20px; padding: 4px 12px; cursor: pointer; font-size: 0.7rem; }
+        .delete-daily-btn { background: #e74c3c; color: white; border: none; border-radius: 20px; padding: 4px 12px; cursor: pointer; font-size: 0.7rem; }
+        .login-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .login-box { background: white; padding: 1.5rem; border-radius: 30px; text-align: center; width: 280px; }
+        .login-box input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 25px; border: 1px solid #ccc; }
+        .footer-note { margin-top: 1rem; text-align: center; font-size: 0.65rem; color: #3f627f; border-top: 1px dashed #b9d0e2; padding-top: 0.8rem; }
+        .welcome-msg { text-align: center; color: #4b6f8c; font-size: 0.8rem; margin-bottom: 0.8rem; }
+        .result-header { background: #f8f9fa; padding: 12px; border-radius: 20px; margin-bottom: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .pdf-btn-sm { background: #dc3545; border: none; padding: 6px 15px; border-radius: 30px; color: white; cursor: pointer; font-size: 0.75rem; }
+        .daily-stats-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 20px; padding: 15px; margin-bottom: 20px; }
+        .daily-stats-title { color: #856404; font-weight: bold; margin-bottom: 10px; font-size: 1.1rem; }
+        @media (max-width: 600px) { .container { padding: 1rem; } .names-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+<div class="container" id="reportContainer">
+    <div class="header">
+        <div class="ministry">وزارة التعليم العالي والبحث العلمي</div>
+        <div class="ministry" style="font-size:0.8rem;">هيئة البحث العلمي</div>
+        <div class="sub">مركز البحوث الزراعية</div>
+        <h1>🏛️ قسم علوم الأغذية والتقانات الاحيائية</h1>
+        <p>سجل إجازات الموظفين</p>
+        <div class="date-box">📅 <span id="currentDate"></span></div>
+    </div>
+    <div id="connectionStatus" class="connection-status">🟢 متصل بقاعدة البيانات</div>
+    <div class="welcome-msg" id="welcomeMsg">🔍 يمكنك البحث عن موظف أو تاريخ محدد</div>
 
-<div class="container-lg">
-    
-    <!-- العنوان -->
-    <div class="mb-4">
-        <h1 class="page-title">
-            <i class="fas fa-calendar-plus"></i> إدارة الإجازات الطويلة
-        </h1>
-        <p class="sub-title"><i class="fas fa-chevron-left"></i> أدخل بيانات الإجازة، اضغط "احسب" لحساب تاريخ المباشرة وإضافتها للقائمة</p>
+    <div class="search-section">
+        <!-- حقل بحث الاسم -->
+        <div class="search-row">
+            <div class="search-label">🔎 بحث بالاسم:</div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="أدخل اسم الموظف (مثال: علي خالد)">
+                <button id="searchBtn" class="btn-secondary btn">بحث</button>
+                <button id="clearSearchBtn" class="btn-secondary btn" style="background:#95a5a6;">مسح</button>
+                <button id="adminBtn" class="btn-admin btn">🔐 إدارة</button>
+            </div>
+        </div>
+        
+        <!-- حقل بحث التاريخ (يوم محدد) -->
+        <div class="search-row">
+            <div class="search-label">📅 بحث بتاريخ محدد:</div>
+            <div class="search-box">
+                <input type="text" id="dateSearchInput" placeholder="مثال: 5/3/2026 أو 5-3-2026">
+                <button id="searchDateBtn" class="btn-secondary btn">بحث</button>
+            </div>
+            <div class="date-example" style="font-size:0.7rem; color:#666; margin-top:5px;">📌 يمكنك كتابة التاريخ بأي صيغة (يوم/شهر/سنة)</div>
+        </div>
+        
+        <div id="searchResults" class="search-results"></div>
     </div>
 
-    <!-- نموذج الإدخال -->
-    <div class="main-card">
-        <div class="row g-4">
-            <div class="col-md-3">
-                <label class="form-label"><i class="fas fa-user"></i> اسم المنتسب</label>
-                <input type="text" class="form-control" id="empName" placeholder="أدخل الاسم الكامل">
-            </div>
-            <div class="col-md-3">
-                <label class="form-label"><i class="fas fa-calendar-alt"></i> تاريخ الإجازة</label>
-                <input type="date" class="form-control" id="startDate">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label"><i class="fas fa-clock"></i> عدد الأيام</label>
-                <input type="number" class="form-control" id="daysCount" placeholder="مثلاً 30" min="1">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label"><i class="fas fa-calendar-check"></i> تاريخ المباشرة</label>
-                <input type="text" class="form-control" id="returnDate" disabled placeholder="سيُحسب تلقائياً">
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button class="btn btn-calculate" id="calculateBtn">
-                    <i class="fas fa-calculator"></i> احسب وأضف
-                </button>
-            </div>
-        </div>
-
-        <!-- عرض تاريخ المباشرة بشكل منفصل -->
-        <div class="row mt-3">
-            <div class="col-12">
-                <div class="highlight-box d-flex justify-content-between align-items-center flex-wrap">
-                    <div>
-                        <span class="label"><i class="fas fa-arrow-left"></i> تاريخ المباشرة المحسوب:</span>
-                        <span class="value me-3" id="returnDisplay">لم يتم الحساب بعد</span>
-                    </div>
-                    <div>
-                        <span class="label"><i class="fas fa-info-circle"></i> سيتم إضافة الإجازة للجدول عند الضغط على احسب</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- إحصائيات كل موظف (دائمة) -->
+    <div class="stats-table-wrapper">
+        <div class="stats-title">📈 إحصائيات الإجازات لكل موظف (إجمالي تراكمي)</div>
+        <table class="stats-table">
+            <thead><tr><th>الموظف</th><th>✅ اعتيادية</th><th>🩺 مرضية</th><th>🏢 رسمية</th><th>⏱️ زمنية</th><th>📊 الإجمالي</th></thead>
+            <tbody id="globalStatsTableBody">جاري التحميل...</tbody>
+        </table>
     </div>
 
-    <!-- الإحصائيات -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3 col-6">
-            <div class="stat-box">
-                <div class="number" id="totalCount">0</div>
-                <div class="label">إجمالي الإجازات</div>
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-title">⚙️ لوحة الإدارة - إضافة متعددة</div>
+        <div class="multi-names-section">
+            <div class="multi-names-title">📝 إضافة عدة موظفين بنفس نوع الإجازة والعدد</div>
+            <div class="names-grid" id="namesGrid">
+                <div class="name-field"><span>1.</span><input type="text" class="multi-name" placeholder="اسم الموظف الأول"></div>
+                <div class="name-field"><span>2.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثاني"></div>
+                <div class="name-field"><span>3.</span><input type="text" class="multi-name" placeholder="اسم الموظف الثالث"></div>
+                <div class="name-field"><span>4.</span><input type="text" class="multi-name" placeholder="اسم الموظف الرابع"></div>
+                <div class="name-field"><span>5.</span><input type="text" class="multi-name" placeholder="اسم الموظف الخامس"></div>
+            </div>
+            <div class="single-controls">
+                <div class="control-group"><label>📌 نوع الإجازة</label><select id="multiLeaveType"><option value="اعتيادية">اعتيادية (أيام)</option><option value="مرضية">مرضية (أيام)</option><option value="رسمية">رسمية (أيام)</option><option value="زمنية">زمنية (ساعات)</option></select></div>
+                <div class="control-group"><label>🔢 العدد</label><input type="number" id="multiLeaveCount" value="1" step="1"></div>
+                <div class="control-group"><button id="addMultipleBtn" class="btn-success btn" style="margin-top: 22px;">➕ إضافة الكل</button></div>
             </div>
         </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-box" style="border-bottom-color: #27ae60;">
-                <div class="number" id="activeCount">0</div>
-                <div class="label">جارية</div>
+        <div class="multi-names-section" style="margin-top: 10px;">
+            <div class="multi-names-title">➕ إضافة فردية</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
+                <div style="flex:2; min-width: 150px;"><input type="text" id="singleName" placeholder="اسم الموظف" style="width:100%; padding:10px; border-radius:25px;"></div>
+                <div style="flex:1;"><select id="singleType" style="width:100%; padding:10px; border-radius:25px;"><option value="اعتيادية">اعتيادية</option><option value="مرضية">مرضية</option><option value="رسمية">رسمية</option><option value="زمنية">زمنية</option></select></div>
+                <div style="flex:0.5;"><input type="number" id="singleCount" value="1" style="width:100%; padding:10px; border-radius:25px;"></div>
+                <div><button id="addSingleBtn" class="btn">➕ إضافة</button></div>
             </div>
         </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-box" style="border-bottom-color: #f39c12;">
-                <div class="number" id="upcomingCount">0</div>
-                <div class="label">قادمة</div>
-            </div>
+        <div class="actions-bar">
+            <button id="refreshBtn" class="btn-secondary btn">🔄 تحديث البيانات</button>
+            <button id="logoutBtn" class="btn-secondary btn" style="background:#7f8c8d;">🚪 خروج من الإدارة</button>
         </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-box" style="border-bottom-color: #e74c3c;">
-                <div class="number" id="endedCount">0</div>
-                <div class="label">منتهية</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- جدول الإجازات -->
-    <div class="main-card">
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-            <h5 style="color: #1a237e; font-weight: 700;">
-                <i class="fas fa-list-ul" style="color: #3f51b5;"></i> قائمة الإجازات
-                <span class="badge bg-primary ms-2" id="recordCount">0</span>
-            </h5>
-            <div class="action-buttons">
-                <button class="btn btn-export" onclick="exportCSV()">
-                    <i class="fas fa-file-excel"></i> تصدير CSV
-                </button>
-                <button class="btn btn-delete-all" onclick="deleteAll()">
-                    <i class="fas fa-trash-alt"></i> مسح الكل
-                </button>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <table class="table" id="vacationTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>الاسم</th>
-                        <th>تاريخ الإجازة</th>
-                        <th>عدد الأيام</th>
-                        <th>تاريخ المباشرة</th>
-                        <th>الحالة</th>
-                        <th>إجراء</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr>
-                        <td colspan="7">
-                            <div class="empty-state">
-                                <i class="fas fa-umbrella-beach"></i>
-                                <h5>لا توجد إجازات مسجلة</h5>
-                                <p class="text-muted">أدخل البيانات واضغط "احسب وأضف"</p>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>#</th><th>الاسم</th><th>الاسم الموحد</th><th>النوع</th><th>المدة</th><th>التاريخ</th><th>حذف</th></thead>
+                <tbody id="adminTableBody"></tbody>
             </table>
         </div>
     </div>
+    <div class="footer-note">✅ البيانات محفوظة في Google Sheets · كلمة المرور: admin</div>
 </div>
+<div id="loginOverlay" class="login-overlay"><div class="login-box"><h3>🔐 الدخول</h3><input type="password" id="passwordInput"><button id="loginBtn" class="btn" style="width:100%;">تأكيد</button><button id="cancelLoginBtn" class="btn-secondary btn" style="width:100%; margin-top:8px;">إلغاء</button></div></div>
 
 <script>
-    // ===== المتغيرات =====
-    let vacations = [];
-    let counter = 1;
+    const API_URL = "https://script.google.com/macros/s/AKfycbyYqrwKQCK62NXfUwDHvAJai6QyXmVtQ0juulYbiNTkpbKxZPIGTTsMSIjcUHByY4YLEw/exec";
+    const ADMIN_PASSWORD = "admin";
+    let leavesArray = [];
+    let isAdmin = false;
 
-    // ===== عناصر DOM =====
-    const empName = document.getElementById('empName');
-    const startDate = document.getElementById('startDate');
-    const daysCount = document.getElementById('daysCount');
-    const returnDate = document.getElementById('returnDate');
-    const returnDisplay = document.getElementById('returnDisplay');
-    const calculateBtn = document.getElementById('calculateBtn');
-    const tableBody = document.getElementById('tableBody');
-    const recordCount = document.getElementById('recordCount');
+    // --- دوال مساعدة للتعامل مع التواريخ ---
+    function extractDateFromStored(storedStr) {
+        if (!storedStr) return null;
+        let match = storedStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+        if (match) {
+            let day = parseInt(match[1]);
+            let month = parseInt(match[2]) - 1;
+            let year = parseInt(match[3]);
+            return new Date(year, month, day);
+        }
+        return null;
+    }
 
-    // ===== دالة حساب تاريخ المباشرة =====
-    function calculateReturnDate() {
-        const start = startDate.value;
-        const days = parseInt(daysCount.value);
-
-        if (!start || !days || days < 1) {
-            returnDate.value = '';
-            returnDisplay.textContent = 'يرجى إدخال تاريخ وعدد أيام صحيح';
-            returnDisplay.style.color = '#e74c3c';
+    function parseUserDate(dateStr) {
+        if (!dateStr) return null;
+        let numbers = dateStr.match(/\d+/g);
+        if (!numbers || numbers.length < 3) return null;
+        
+        let day, month, year;
+        if (numbers[0].length === 4) {
+            year = parseInt(numbers[0]);
+            month = parseInt(numbers[1]) - 1;
+            day = parseInt(numbers[2]);
+        } else if (numbers[2].length === 4) {
+            day = parseInt(numbers[0]);
+            month = parseInt(numbers[1]) - 1;
+            year = parseInt(numbers[2]);
+        } else {
             return null;
         }
-
-        const startObj = new Date(start);
-        const returnObj = new Date(startObj);
-        returnObj.setDate(returnObj.getDate() + days);
-
-        const day = String(returnObj.getDate()).padStart(2, '0');
-        const month = String(returnObj.getMonth() + 1).padStart(2, '0');
-        const year = returnObj.getFullYear();
-        const formatted = `${day}/${month}/${year}`;
-
-        returnDate.value = formatted;
-        returnDisplay.textContent = formatted;
-        returnDisplay.style.color = '#1a237e';
-
-        return returnObj;
-    }
-
-    // ===== دالة تحديد الحالة =====
-    function getStatus(startDateStr, returnDateStr) {
-        const today = new Date();
-        today.setHours(0,0,0,0);
-        const start = new Date(startDateStr);
-        start.setHours(0,0,0,0);
         
-        // تحويل تاريخ المباشرة من نص (dd/mm/yyyy) إلى Date
-        const parts = returnDateStr.split('/');
-        const end = new Date(parts[2], parts[1] - 1, parts[0]);
-        end.setHours(0,0,0,0);
-
-        if (end < today) return { text: 'منتهية', class: 'badge bg-danger text-white' };
-        if (start <= today && end >= today) return { text: 'جارية', class: 'badge bg-success text-white' };
-        return { text: 'قادمة', class: 'badge bg-warning text-dark' };
-    }
-
-    // ===== إضافة إجازة =====
-    function addVacation() {
-        const name = empName.value.trim();
-        const start = startDate.value;
-        const days = parseInt(daysCount.value);
-
-        if (!name) { alert('يرجى إدخال اسم المنتسب'); return; }
-        if (!start) { alert('يرجى اختيار تاريخ الإجازة'); return; }
-        if (!days || days < 1) { alert('يرجى إدخال عدد أيام صحيح'); return; }
-
-        const returnObj = calculateReturnDate();
-        if (!returnObj) return;
-
-        const returnFormatted = returnDate.value;
-        const status = getStatus(start, returnFormatted);
-
-        const vacation = {
-            id: counter++,
-            name: name,
-            startDate: start,
-            days: days,
-            returnDate: returnFormatted,
-            statusText: status.text,
-            statusClass: status.class
-        };
-
-        vacations.push(vacation);
-        renderTable();
-        updateStats();
-
-        // تنظيف الحقول
-        startDate.value = '';
-        daysCount.value = '';
-        returnDate.value = '';
-        returnDisplay.textContent = 'تمت الإضافة بنجاح ✅';
-        returnDisplay.style.color = '#27ae60';
-        empName.focus();
-        empName.select();
-
-        showToast('تم إضافة الإجازة بنجاح!');
-    }
-
-    // ===== حذف إجازة مفردة =====
-    function deleteVacation(id) {
-        const vacation = vacations.find(v => v.id === id);
-        if (!vacation) return;
+        if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+        if (month < 0 || month > 11) return null;
+        if (day < 1 || day > 31) return null;
         
-        if (confirm(`هل أنت متأكد من حذف إجازة "${vacation.name}"؟`)) {
-            vacations = vacations.filter(v => v.id !== id);
-            renderTable();
-            updateStats();
-            showToast(`تم حذف إجازة "${vacation.name}"`);
-        }
+        return new Date(year, month, day);
     }
 
-    // ===== حذف جميع الإجازات =====
-    function deleteAll() {
-        if (vacations.length === 0) {
-            showToast('لا توجد إجازات لحذفها');
-            return;
-        }
-        
-        if (confirm(`هل أنت متأكد من حذف جميع الإجازات (${vacations.length} إجازة)؟`)) {
-            vacations = [];
-            counter = 1;
-            renderTable();
-            updateStats();
-            showToast('تم حذف جميع الإجازات');
-        }
+    function isSameDate(date1, date2) {
+        if (!date1 || !date2) return false;
+        return date1.getFullYear() === date2.getFullYear() &&
+               date1.getMonth() === date2.getMonth() &&
+               date1.getDate() === date2.getDate();
     }
 
-    // ===== عرض الجدول =====
-    function renderTable() {
-        if (vacations.length === 0) {
-            tableBody.innerHTML = `
-                <tr>
-                    <td colspan="7">
-                        <div class="empty-state">
-                            <i class="fas fa-umbrella-beach"></i>
-                            <h5>لا توجد إجازات مسجلة</h5>
-                            <p class="text-muted">أدخل البيانات واضغط "احسب وأضف"</p>
-                        </div>
-                    </td>
-                </tr>
-            `;
-            recordCount.textContent = '0';
-            return;
-        }
-
-        const sorted = [...vacations].sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
-
-        tableBody.innerHTML = sorted.map((v, index) => `
-            <tr>
-                <td><strong>${index + 1}</strong></td>
-                <td><strong>${v.name}</strong></td>
-                <td>${formatDate(v.startDate)}</td>
-                <td><span class="badge-days">${v.days} يوم</span></td>
-                <td><span class="badge-return">${v.returnDate}</span></td>
-                <td><span class="${v.statusClass}" style="padding: 6px 16px; border-radius: 20px;">${v.statusText}</span></td>
-                <td>
-                    <button class="btn btn-delete-single" onclick="deleteVacation(${v.id})" title="حذف هذه الإجازة">
-                        <i class="fas fa-trash-alt"></i> حذف
-                    </button>
-                </td>
-            </tr>
-        `).join('');
-
-        recordCount.textContent = vacations.length;
+    function formatDateForDisplay(date) {
+        if (!date || isNaN(date.getTime())) return "تاريخ غير صالح";
+        const weekdays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        const dayName = weekdays[date.getDay()];
+        return `${dayName}، ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
     }
 
-    // ===== تحديث الإحصائيات =====
-    function updateStats() {
-        const today = new Date();
-        today.setHours(0,0,0,0);
-
-        let active = 0, upcoming = 0, ended = 0;
-
-        vacations.forEach(v => {
-            const start = new Date(v.startDate);
-            start.setHours(0,0,0,0);
-            const parts = v.returnDate.split('/');
-            const end = new Date(parts[2], parts[1] - 1, parts[0]);
-            end.setHours(0,0,0,0);
-
-            if (end < today) ended++;
-            else if (start <= today && end >= today) active++;
-            else upcoming++;
-        });
-
-        document.getElementById('totalCount').textContent = vacations.length;
-        document.getElementById('activeCount').textContent = active;
-        document.getElementById('upcomingCount').textContent = upcoming;
-        document.getElementById('endedCount').textContent = ended;
+    function formatDate(dateString) {
+        const date = extractDateFromStored(dateString);
+        if (date && !isNaN(date.getTime())) return formatDateForDisplay(date);
+        return dateString || "غير محدد";
     }
 
-    // ===== تصدير CSV =====
-    function exportCSV() {
-        if (vacations.length === 0) {
-            alert('لا توجد بيانات للتصدير.');
-            return;
-        }
-
-        const headers = ['الاسم', 'تاريخ الإجازة', 'عدد الأيام', 'تاريخ المباشرة', 'الحالة'];
-        let csv = '\uFEFF';
-        csv += headers.join(',') + '\n';
-        vacations.forEach(v => {
-            csv += `${v.name},${formatDate(v.startDate)},${v.days},${v.returnDate},${v.statusText}\n`;
-        });
-
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `الإجازات_${new Date().toISOString().split('T')[0]}.csv`;
-        link.click();
-        URL.revokeObjectURL(link.href);
+    function extractNumber(value) {
+        if (value === undefined || value === null) return 0;
+        if (typeof value === 'number') return value;
+        let num = parseFloat(value.toString().replace(/[^0-9.-]/g, ''));
+        return isNaN(num) ? 0 : num;
     }
 
-    // ===== أدوات مساعدة =====
-    function formatDate(dateStr) {
-        if (!dateStr) return '';
-        const d = new Date(dateStr);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}/${month}/${year}`;
+    function getNormalizedName(fullName) {
+        if(!fullName) return "";
+        const parts = fullName.trim().split(/\s+/);
+        if(parts.length === 1) return parts[0];
+        return parts[0] + " " + parts[1];
     }
 
-    function showToast(message) {
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a237e;
-            color: white;
-            padding: 14px 35px;
-            border-radius: 12px;
-            font-weight: 700;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.4s;
-            font-size: 15px;
-            text-align: center;
-            max-width: 90%;
-        `;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.style.opacity = '1', 50);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 400);
-        }, 2500);
+    function updateDate() {
+        document.getElementById('currentDate').innerText = formatDateForDisplay(new Date());
+    }
+    updateDate();
+    setInterval(updateDate, 60000);
+    
+    function getCurrentDateString() { 
+        return formatDateForDisplay(new Date());
     }
 
-    // ===== ربط الأحداث =====
-    calculateBtn.addEventListener('click', addVacation);
+    async function callAPI(action, data = {}) {
+        const params = new URLSearchParams({ action, ...data });
+        const url = `${API_URL}?${params.toString()}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
+    }
 
-    startDate.addEventListener('change', calculateReturnDate);
-    daysCount.addEventListener('input', calculateReturnDate);
-
-    document.querySelectorAll('#empName, #startDate, #daysCount').forEach(input => {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addVacation();
+    async function loadAllLeaves() {
+        try {
+            const result = await callAPI("getAll");
+            if(result.success) {
+                leavesArray = (result.leaves || []).map(l => ({ 
+                    ...l, 
+                    count: extractNumber(l.count),
+                    dateStr: l.dateStr,
+                    dateObj: extractDateFromStored(l.dateStr)
+                }));
+                renderGlobalStats();
+                if(isAdmin) { renderAdminTable(); }
+                console.log("تم تحميل البيانات:", leavesArray.length);
             }
+        } catch(error) { 
+            console.error(error); 
+            document.getElementById('connectionStatus').innerHTML = '🔴 خطأ في الاتصال بقاعدة البيانات';
+        }
+    }
+
+    function renderGlobalStats() {
+        const statsMap = new Map();
+        for(let leave of leavesArray) {
+            const normName = leave.normalizedName;
+            const type = leave.type;
+            let val = leave.count;
+            if(!statsMap.has(normName)) statsMap.set(normName, { اعتيادية:0, مرضية:0, رسمية:0, زمنية:0 });
+            const record = statsMap.get(normName);
+            if(type === 'اعتيادية') record.اعتيادية += val;
+            else if(type === 'مرضية') record.مرضية += val;
+            else if(type === 'رسمية') record.رسمية += val;
+            else if(type === 'زمنية') record.زمنية += val;
+        }
+        const tbody = document.getElementById('globalStatsTableBody');
+        if(statsMap.size === 0) { tbody.innerHTML = '<td><td colspan="6">لا توجد بيانات</td></tr>'; return; }
+        let rows = '';
+        for(let [name, data] of [...statsMap.entries()].sort((a,b) => a[0].localeCompare(b[0]))) {
+            let totalDays = data.اعتيادية + data.مرضية + data.رسمية;
+            rows += `<tr>
+                        <td style="font-weight:bold;">${escapeHtml(name)}</td>
+                        <td>${data.اعتيادية}</td><td>${data.مرضية}</td>
+                        <td>${data.رسمية}</td><td>${data.زمنية}</td>
+                        <td>${totalDays} يوم / ${data.زمنية} ساعة</td>
+                    </tr>`;
+        }
+        tbody.innerHTML = rows;
+    }
+
+    function renderAdminTable() {
+        const tbody = document.getElementById('adminTableBody');
+        if(!leavesArray.length) { tbody.innerHTML = '<tr><td colspan="7">لا توجد إجازات</td></tr>'; return; }
+        let html = '';
+        leavesArray.forEach((item, idx) => {
+            let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم';
+            let formattedDate = formatDate(item.dateStr);
+            html += `<tr>
+                        <td>${idx+1}</td>
+                        <td>${escapeHtml(item.originalName)}</td>
+                        <td>${escapeHtml(item.normalizedName)}</td>
+                        <td>${escapeHtml(item.type)}</td>
+                        <td>${item.count} ${unit}</td>
+                        <td>${escapeHtml(formattedDate)}</td>
+                        <td><button class="delete-btn" data-id="${item.id}">✖ حذف</button></td>
+                    </tr>`;
         });
-    });
+        tbody.innerHTML = html;
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                if(confirm("حذف الإجازة؟")) { 
+                    await callAPI("delete", { id: btn.getAttribute('data-id') }); 
+                    await loadAllLeaves(); 
+                }
+            });
+        });
+    }
 
-    // ===== تحميل أولي =====
-    renderTable();
-    updateStats();
+    async function addMultipleLeaves() {
+        if(!isAdmin) { alert("غير مصرح!"); return; }
+        const nameInputs = document.querySelectorAll('.multi-name');
+        const leaveType = document.getElementById('multiLeaveType').value;
+        const count = parseFloat(document.getElementById('multiLeaveCount').value);
+        if(isNaN(count) || count <= 0) { alert("أدخل عدداً صحيحاً"); return; }
+        let added = 0;
+        for(let input of nameInputs) {
+            let name = input.value.trim();
+            if(name) {
+                await callAPI("add", { name: name, type: leaveType, count: count });
+                added++;
+                input.value = "";
+            }
+        }
+        if(added) { await loadAllLeaves(); alert(`تمت إضافة ${added} إجازات`); }
+        else alert("لم تدخل أي أسماء");
+    }
+
+    async function addSingleLeave() {
+        if(!isAdmin) { alert("غير مصرح!"); return; }
+        const name = document.getElementById('singleName').value.trim();
+        const type = document.getElementById('singleType').value;
+        const count = parseFloat(document.getElementById('singleCount').value);
+        if(!name) { alert("أدخل الاسم"); return; }
+        if(isNaN(count) || count <= 0) { alert("أدخل عدداً صحيحاً"); return; }
+        await callAPI("add", { name: name, type: type, count: count });
+        await loadAllLeaves();
+        document.getElementById('singleName').value = "";
+        document.getElementById('singleCount').value = "1";
+        alert("تمت الإضافة بنجاح");
+    }
+
+    // *** الدالة المعدلة للبحث بالتاريخ ***
+    function searchByDate() {
+        const dateInput = document.getElementById('dateSearchInput').value.trim();
+        if (!dateInput) {
+            alert("الرجاء إدخال تاريخ للبحث");
+            return;
+        }
+
+        const targetDate = parseUserDate(dateInput);
+        if (!targetDate) {
+            alert("صيغة التاريخ غير صحيحة. استخدم مثلاً: 5/3/2026");
+            return;
+        }
+
+        // تصفية الإجازات التي تطابق التاريخ المدخل
+        const results = leavesArray.filter(leave => {
+            if (!leave.dateObj) return false;
+            return isSameDate(leave.dateObj, targetDate);
+        });
+
+        const resultsDiv = document.getElementById('searchResults');
+        if (results.length === 0) {
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `<div style="background:#f8d7da; padding:15px; border-radius:20px; color:#721c24;">❌ لا توجد إجازات مسجلة في تاريخ ${escapeHtml(dateInput)}</div>`;
+            return;
+        }
+
+        // عرض النتائج في جدول جميل
+        let html = `<div class="result-header">📅 نتائج البحث عن تاريخ: ${formatDateForDisplay(targetDate)} (${results.length} إجازة)</div>
+                    <div class="table-wrapper">
+                    <table style="width:100%">
+                        <thead><tr><th>الاسم</th><th>النوع</th><th>المدة</th></tr></thead>
+                        <tbody>`;
+        for (let item of results) {
+            let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم';
+            html += `<tr>
+                        <td>${escapeHtml(item.originalName)}</td>
+                        <td>${escapeHtml(item.type)}</td>
+                        <td>${item.count} ${unit}</td>
+                     </tr>`;
+        }
+        html += `</tbody></table></div><button id="closeResultsBtn" class="btn-secondary btn" style="margin-top:15px;">إغلاق</button>`;
+        resultsDiv.innerHTML = html;
+        resultsDiv.style.display = 'block';
+        document.getElementById('closeResultsBtn').addEventListener('click', () => { resultsDiv.style.display = 'none'; });
+    }
+
+    function searchByName() {
+        const query = document.getElementById('searchInput').value.trim();
+        if(!query) { alert("أدخل الاسم للبحث"); return; }
+        const normalizedQuery = getNormalizedName(query).toLowerCase();
+        const results = leavesArray.filter(leave => leave.normalizedName.toLowerCase().includes(normalizedQuery));
+        const resultsDiv = document.getElementById('searchResults');
+        if(results.length === 0) { resultsDiv.style.display = 'block'; resultsDiv.innerHTML = `<div style="background:#f8d7da; padding:15px; border-radius:20px;">❌ لا توجد إجازات للموظف "${escapeHtml(query)}"</div>`; return; }
+        let html = `<div class="result-header">🔍 نتائج البحث عن "${escapeHtml(query)}" (${results.length})</div><div class="table-wrapper"><table style="width:100%"><thead><tr><th>التاريخ</th><th>النوع</th><th>المدة</th></tr></thead><tbody>`;
+        for(let item of results) { let unit = (item.type === 'زمنية') ? 'ساعة' : 'يوم'; html += `<tr><td>${escapeHtml(formatDate(item.dateStr))}</td><td>${escapeHtml(item.type)}</td><td>${item.count} ${unit}</td></tr>`; }
+        html += `</tbody></table></div><button id="closeResultsBtn" class="btn-secondary btn" style="margin-top:15px;">إغلاق</button>`;
+        resultsDiv.innerHTML = html; resultsDiv.style.display = 'block';
+        document.getElementById('closeResultsBtn')?.addEventListener('click', () => { resultsDiv.style.display = 'none'; });
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m) { if(m === '&') return '&amp;'; if(m === '<') return '&lt;'; if(m === '>') return '&gt;'; return m;}); }
+
+    function clearSearch() { document.getElementById('searchInput').value = ''; document.getElementById('dateSearchInput').value = ''; document.getElementById('searchResults').style.display = 'none'; }
+
+    function showAdminLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
+    function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
+
+    function login() { const pwd = document.getElementById('passwordInput').value; if(pwd === ADMIN_PASSWORD) { isAdmin = true; document.getElementById('adminPanel').style.display = 'block'; document.getElementById('adminBtn').style.display = 'none'; hideLogin(); loadAllLeaves(); } else { alert("كلمة المرور خاطئة"); } }
+
+    function logout() { isAdmin = false; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('adminBtn').style.display = 'inline-block'; }
+
+    document.getElementById('adminBtn').addEventListener('click', showAdminLogin);
+    document.getElementById('loginBtn').addEventListener('click', login);
+    document.getElementById('cancelLoginBtn').addEventListener('click', hideLogin);
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('refreshBtn').addEventListener('click', () => loadAllLeaves());
+    document.getElementById('addMultipleBtn').addEventListener('click', addMultipleLeaves);
+    document.getElementById('addSingleBtn').addEventListener('click', addSingleLeave);
+    document.getElementById('searchBtn').addEventListener('click', searchByName);
+    document.getElementById('clearSearchBtn').addEventListener('click', clearSearch);
+    document.getElementById('searchDateBtn').addEventListener('click', searchByDate);
+    loadAllLeaves();
 </script>
-
 </body>
 </html>
